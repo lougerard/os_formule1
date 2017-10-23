@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int main(int argc, char* argv[]){
+
+	testCompareTo(1.2,0.5);
+	testCompareTo(1.45,1.45);
+	testCompareTo(0.12,5.98);
+
+}
+
 /*
 Methode compareTo
 time1 : temps en secondes de type double
@@ -23,12 +31,10 @@ affiche le resultat de compareTo
 */
 void testCompareTo(double t1, double t2){
 	if(compareTo(t1,t2)==1){
-		printf("t1 est plus grand que t2") ;
+		printf("t1 est plus grand que t2\n") ;
 	}else if(compareTo(t1,t2)==0){
-		printf("t1 = t2");
+		printf("t1 = t2\n");
 	}else if(compareTo(t1,t2)==-1){
-		printf("t1 est plus petit que t2");
+		printf("t1 est plus petit que t2\n");
 	}
 }
-
-	
