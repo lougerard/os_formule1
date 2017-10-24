@@ -12,5 +12,8 @@ Qualification : Qualification.c
 rand : rand.c rand.h
 	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o rand rand.c rand.h  
 
+compareTo : compareTo.c
+	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o compareTo compareTo.c
+
 clean : 
-	rm -rf rand a.out essai GP test tester Qualification
+	rm -rf rand a.out essai GP test tester Qualification compareTo compareTo.compile
