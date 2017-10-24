@@ -14,5 +14,6 @@ double ourRandom(double input) {
 
 
 int main(int argc, char* argv[]) {
-return 1;
+	printf("%f\n", ourRandom(1.5));
+	return 1;
 }
