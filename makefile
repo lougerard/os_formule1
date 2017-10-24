@@ -13,4 +13,4 @@ rand : rand.c rand.h
 	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o rand rand.c rand.h  
 
 clean : 
-	rm -rf a.out essai GP test tester Qualification
+	rm -rf rand a.out essai GP test tester Qualification

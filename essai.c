@@ -1,16 +1,13 @@
+#include <stdlib.h>
+
+#include <stdio.h>
 #include "rand.h"
 
 double ourRandom(double truc);
 
 int main (int argc, char* argv[]){
-	printf("%f\n",ourRandom(1.2));
+	double a = ourRandom((double) 0.8);
+	printf("%f\n",a);
 
 }
 
-double ourRandom(double input) {
-
-        srand(time(NULL));
-        double randomNumber = (double) input * (double) rand() / (double) RAND_MAX;
-        //printf("%f\n", randomNumber);
-        return randomNumber;
-}
