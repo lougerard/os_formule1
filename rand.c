@@ -13,6 +13,6 @@ double ourRandom(double input) {
 }
 
 
-int main(int argc, char* argv[]){
-	printf("%f\n", ourRandom((double) 1.2));
+int main(int argc, char* argv[]) {
+return 1;
 }

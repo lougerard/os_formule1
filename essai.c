@@ -6,8 +6,6 @@
 double ourRandom(double truc);
 
 int main (int argc, char* argv[]){
-	double a = ourRandom((double) 0.8);
-	printf("%f\n",a);
-
+//	double a = ourRandom((double) 0.8);
+	printf("%f\n",1.2);
 }
-
