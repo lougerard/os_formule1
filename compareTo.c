@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void testCompareTo(double a, double b);
+
 int main(int argc, char* argv[]){
 
 	testCompareTo(1.2,0.5);
