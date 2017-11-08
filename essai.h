@@ -5,6 +5,56 @@
 #include <time.h>
 #include <stdlib.h>
 #include "rand.h"
+struct Voiture {
+	int numVoiture;
+	double tempsSecteur1;
+	double tempsSecteur2;
+	double tempsSecteur3; // temps actuel secteur 3
+	double tempsActuel;
 
+	double meilleurTourEssai;
+	int nbrTourEssai1;
+
+	double meilleurTourQualif;
+	int nbrTourQualif;
+
+	double tempsFinal;
+	int positionFinal;
+	bool pitstop;
+	int nbrPitstop;
+	bool abandon;
+	}
+
+struct Circuit {
+	double secteur1;
+	double secteur2;
+	double secteur3;
+	double meilleurSecteur1;
+	int numVoitureS1;
+	double meilleurSecteur2;
+	int numVoitureS2;
+	double meilleurSecteur3;
+	int numVoitureS2;
+	}
+
+struct Essai {
+	double meilleurTourEssai;
+	}
+	
+struct Qualification {
+	double meilleurTourQualif;
+	}
+
+struct Course {
+	int 
+	}
+struct Classement {
+	int position;
+	int numVoiture;
+	int nbrPitstop;
+	double tempsFinal
+	}
+
+Pitstop: temps a chaque pitstop
 #endif
 
