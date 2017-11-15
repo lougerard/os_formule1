@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "rand.h"
+#include <stdbool.h>
 struct Voiture {
 	int numVoiture;
 	double tempsSecteur1;
@@ -23,7 +24,7 @@ struct Voiture {
 	bool pitstop;
 	int nbrPitstop;
 	bool abandon;
-	}
+	};
 
 struct Circuit {
 	double secteur1Min;
@@ -37,27 +38,30 @@ struct Circuit {
 	double meilleurSecteur2;
 	int numVoitureS2;
 	double meilleurSecteur3;
-	int numVoitureS2;
-	}
+	int numVoitureS3;
+	};
 
 struct Essai {
 	double meilleurTourEssai;
-	}
+	};
 	
 struct Qualification {
 	double meilleurTourQualif;
-	}
+	};
 
 struct Course {
-	int 
-	}
+	double meilleurTourCourse;
+	int nbrTour;
+	};
 struct Classement {
 	int position;
 	int numVoiture;
 	int nbrPitstop;
-	double tempsFinal
-	}
+	double tempsFinal;
+	};
 
-Pitstop: temps a chaque pitstop
+//Pitstop: temps a chaque pitstop
+double ourRandom(double truc);
+
 #endif
 
