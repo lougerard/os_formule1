@@ -20,8 +20,8 @@ double timeTour(double a, double b, double c) {
 
 
 
-int main(int argc, char* argv[]) {
+/*int main(int argc, char* argv[]) {
 	printf("%f\n", ourRandom(1.45));
 	printf("%f\n", timeTour(0.5,0.4,0.55));
 	return 1;
-}
+}*/
