@@ -26,9 +26,12 @@ struct Voiture {
 	}
 
 struct Circuit {
-	double secteur1;
-	double secteur2;
-	double secteur3;
+	double secteur1Min;
+	double secteur2Min;
+	double secteur3Min;
+	double sectuer1Max;
+	double secteur2Max;
+	double secteur3Max;
 	double meilleurSecteur1;
 	int numVoitureS1;
 	double meilleurSecteur2;
