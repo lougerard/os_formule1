@@ -62,6 +62,7 @@ struct Classement {
 
 //Pitstop: temps a chaque pitstop
 double ourRandom(double truc);
+double tempsParSecteur(double tempsSecteurMin, double tempsSecteurMax);
 
 #endif
 

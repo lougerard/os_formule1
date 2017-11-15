@@ -1,17 +1,18 @@
 #include <stdlib.h>
-#include "essai.h"
-#include <stdio.h>
 #include "rand.h"
+#include <stdio.h>
+#include "essai.h"
 
 double ourRandom(double truc);
 
 int main (int argc, char* argv[]){
-//	double a = ourRandom((double) 0.8);
-	printf("%f\n",1.2);
-
+	//double a = ourRandom((double) 0.8);
+	//printf("%f\n",a);
+	return 0;
 }
-
-double tempsParSecteur(double tempsSecteurMin, double tempsSecteurMax){
-	double temps = tempsSecteurMin + ourRandom(tempsSecteurMax - tempsSecteurMin);
+/*
+double tempsParSecteur (double tempsSecteurMin, double tempsSecteurMax){
+	double temps = ourRandom((double)(tempsSecteurMax - tempsSecteurMin));
+	temps += tempsSecteurMin;
 	return temps;
-}
+}*/
