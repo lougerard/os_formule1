@@ -1,5 +1,5 @@
 #include <stdlib.h>
-
+#include "essai.h"
 #include <stdio.h>
 #include "rand.h"
 
