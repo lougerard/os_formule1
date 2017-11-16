@@ -2,12 +2,12 @@
 #include <time.h>
 #include <stdlib.h>
 #include "essai.h"
-int main(int argc, char *argv[]) {
+/*int main(int argc, char *argv[]) {
 
         return 0;
 
 
-}
+}*/
 int abandon(){
 	if ( ourRandom(1.0) > 0.05){
 		return 1; //continue
