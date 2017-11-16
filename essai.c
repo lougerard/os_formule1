@@ -1,14 +1,13 @@
 #include <stdlib.h>
-//#include "rand.h"
-//#include "rand.c"
+#include "rand.c"
 #include <stdio.h>
-//#include "essai.h"
+#include "essai.h"
 
 //double ourRandom(double truc);
 
 /*int main(int argc, char* argv[]){
-	//double a = ourRandom((double) 0.8);
-	//printf("%f\n",a);
+	double a = tempsParSecteur(30.0, 45.0);
+	printf("%f\n",a);
 	return 0;
 }*/
 

@@ -5,10 +5,11 @@
 
 
 double ourRandom(double input) {
-
+	usleep(300000);
         srand(time(NULL));
 	double randomNumber = (double) input * (double) rand() / (double) RAND_MAX;
        	//printf("%f\n", randomNumber);
+       	usleep(300000);
 	return randomNumber;
 }
 
