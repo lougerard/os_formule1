@@ -30,7 +30,7 @@ struct Circuit {
 	double secteur1Min;
 	double secteur2Min;
 	double secteur3Min;
-	double sectuer1Max;
+	double secteur1Max;
 	double secteur2Max;
 	double secteur3Max;
 	double meilleurSecteur1;
