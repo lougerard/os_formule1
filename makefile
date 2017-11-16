@@ -18,5 +18,8 @@ main : main.c
 compareTo : compareTo.c
 	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o compareTo compareTo.c 
 
+circuit : circuit.c circuit.h
+	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE - o circuit circuit.c circuit.h
+
 clean : 
-	rm -rf rand a.out essai GP test tester Qualification compareTo compareTo.compile main
+	rm -rf rand a.out essai GP test tester Qualification compareTo compareTo.compile main circuit
