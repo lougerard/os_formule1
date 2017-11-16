@@ -17,8 +17,3 @@ double tempsParSecteur(double tempsSecteurMin, double tempsSecteurMax){
 	temps += tempsSecteurMin;
 	return temps;
 }
-
-int main (int argc, char* argv[]){
-	printf("%f\n", tempsParSecteur(20.0, 40.0));
-	return 0;
-}
