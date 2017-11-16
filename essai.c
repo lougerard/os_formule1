@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include "rand.h"
-#include "rand.c"
+//#include "rand.h"
+//#include "rand.c"
 #include <stdio.h>
-#include "essai.h"
+//#include "essai.h"
 
 //double ourRandom(double truc);
 
