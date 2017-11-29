@@ -6,6 +6,7 @@
 #include "circuit.c"
 
 int main (int argc, char* argv[]){
+	srand(time(NULL));
 	struct Circuit *circuit = malloc(sizeof(struct Circuit));
 	circuit->secteur1Min = 30.0;
 	circuit->secteur1Max = 40.0;
