@@ -1,25 +1,28 @@
-all : essai GP Qualification rand compareTo main
+CC=gcc -Wall -Werror -std=gnu99
 
-essai : essai.c essai.h
-	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o essai essai.c essai.h
+all : essai.o GP.o Qualification.o rand.o compareTo.o main.o circuit.o
+	$(CC) -o main essai.o GP.o Qualification.o rand.o compareTo.o circuit.o main.o
 
-GP : GP.c
-	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o GP GP.c 
+essai.o : essai.c
+	 $(CC) -c essai.c
 
-Qualification : Qualification.c
-	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o Qualification  Qualification.c
+GP.o : GP.c
+	$(CC) -c GP.c 
 
-rand : rand.c rand.h
-	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o rand rand.c rand.h  
+Qualification.o : Qualification.c
+	$(CC) -c Qualification.c
 
-main : main.c
-	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o main main.c
+rand.o : rand.c
+	$(CC) -c rand.c
 
-compareTo : compareTo.c
-	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE -o compareTo compareTo.c 
+main.o : main.c
+	$(CC) -c main.c
 
-circuit : circuit.c circuit.h
-	gcc -Wall -Werror -std=c99 -D_SVID_SOURCE - o circuit circuit.c circuit.h
+compareTo.o : compareTo.c
+	$(CC) -c compareTo.c 
+
+circuit.o : circuit.c
+	$(CC) -c circuit.c
 
 clean : 
-	rm -rf rand a.out essai GP test tester Qualification compareTo compareTo.compile main circuit
+	rm -rf *.o main
