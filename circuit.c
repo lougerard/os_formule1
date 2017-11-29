@@ -16,19 +16,19 @@ void voitRoule(struct Voiture *voiture, struct Circuit *circuit){
 			circuit->meilleurSecteur1 = voiture->tempsSecteur1;
 		}
 		printf("sec1 %f\n", voiture->tempsSecteur1);
-		usleep(300000);
+		//usleep(300000);
 		voiture->tempsSecteur2 = tempsParSecteur(circuit->secteur2Min, circuit->secteur2Max);
 		if(circuit->meilleurSecteur2 > voiture->tempsSecteur2){
 			circuit->meilleurSecteur2 = voiture->tempsSecteur2;
 		}
 		printf("sec2 %f\n", voiture->tempsSecteur2);
-		usleep(300000);
+		//usleep(300000);
 		voiture->tempsSecteur3 = tempsParSecteur(circuit->secteur3Min, circuit->secteur3Max);
 		if(circuit->meilleurSecteur3 > voiture->tempsSecteur3){
 			circuit->meilleurSecteur3 = voiture->tempsSecteur3;
 		}
 		printf("sec3 %f\n", voiture->tempsSecteur3);
-		usleep(300000);
+		//usleep(300000);
 		printf("\n");
 	}
 }
