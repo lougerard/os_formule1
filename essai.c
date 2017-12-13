@@ -7,21 +7,14 @@
 #define MILLISECS_PAR_SEC  1000
 
 
-/*
+
 // convertisseur 2e forme d ecriture
-tConvert ( struct timeConvert *t, double nbre){
-	int n = 8;
-	int sec;
-	int milli;
-	int micro;
-	for( int i = 0 ; i<n ; i++){
-		sec + i;
-		t->sec= t;      	 /* ex:  sec= 30 */
-		t->milli= t/1000;	 /* ex: milli= 024 */
-		t->micro= t/100000;	 /* ex: micro= 348 */			
-	}
+tConvert (struct timeConvert *t, double nbr){
+	int sec = (int) nbr;
+	int milli = (int) (nbr - sec) * 1000;
+	t->tSec = sec;
+	t->tMilliSec = milli;
 }
-*/
 
 
 

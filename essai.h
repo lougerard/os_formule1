@@ -26,14 +26,13 @@ struct Voiture {
 	bool abandon;
 	};
 
-// convertisseur secondes, milliseonces, microsecondes
-/*
+// convertisseur secondes, millisec
+
 struct timeConvert {
 	int tSec;
 	int tMilliSec;
-	int tMicroSec;
 };
-*/
+
 
 
 
