@@ -26,6 +26,17 @@ struct Voiture {
 	bool abandon;
 	};
 
+// convertisseur secondes, milliseonces, microsecondes
+/*
+struct timeConvert {
+	int tSec;
+	int tMilliSec;
+	int tMicroSec;
+};
+*/
+
+
+
 struct Circuit {
 	double secteur1Min;
 	double secteur2Min;
