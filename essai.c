@@ -9,7 +9,7 @@
 
 
 // convertisseur 2e forme d ecriture
-tConvert (struct timeConvert *t, double nbr){
+void tConvert (struct timeConvert *t, double nbr){
 	int sec = (int) nbr;
 	int milli = (int) (nbr - sec) * 1000;
 	t->tSec = sec;
