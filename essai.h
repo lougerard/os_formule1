@@ -17,7 +17,7 @@ struct Voiture {
 	int nbrTourEssai;		//Nbr. tour d'essais
 
 	double meilleurTourQualif;	//Meilleur tour durant qualifs
-	int nbrTourQualif;		////Nbr. tour de qualifs
+	int nbrTourQualif;		//Nbr. tour de qualifs
 
 	bool pitstop;			//Si la voiture s'arrete au stand
 	bool abandon;			//Si la voiture a abandonner la course
