@@ -5,7 +5,9 @@
 #include <time.h>
 #include <stdlib.h>
 #include "rand.h"
+#include <stdbool.h>
 struct Voiture {
+<<<<<<< HEAD
 	int numVoiture;			//Numéro de la voiture
 
 	double tempsSecteur1;		//Temps actuel secteur 1
@@ -53,6 +55,74 @@ struct Classement {
 	int nbrTour;			//Nombre de tour pour la course
 	double tempsFinal;		//Temps total de la course
 	}
+=======
+	int numVoiture;
+	double tempsSecteur1;
+	double tempsSecteur2;
+	double tempsSecteur3; // temps actuel secteur 3
+	double tempsActuel;
+
+	double meilleurTourEssai;
+	int nbrTourEssai1;
+
+	double meilleurTourQualif;
+	int nbrTourQualif;
+
+	double tempsFinal;
+	int positionFinal;
+	bool pitstop;
+	int nbrPitstop;
+	bool abandon;
+	};
+
+// convertisseur secondes, millisec
+
+struct timeConvert {
+	int tSec;
+	int tMilliSec;
+};
+
+
+
+
+struct Circuit {
+	double secteur1Min;
+	double secteur2Min;
+	double secteur3Min;
+	double secteur1Max;
+	double secteur2Max;
+	double secteur3Max;
+	double meilleurSecteur1;
+	int numVoitureS1;
+	double meilleurSecteur2;
+	int numVoitureS2;
+	double meilleurSecteur3;
+	int numVoitureS3;
+	};
+
+struct Essai {
+	double meilleurTourEssai;
+	};
+	
+struct Qualification {
+	double meilleurTourQualif;
+	};
+
+struct Course {
+	double meilleurTourCourse;
+	int nbrTour;
+	};
+struct Classement {
+	int position;
+	int numVoiture;
+	int nbrPitstop;
+	double tempsFinal;
+	};
+
+//Pitstop: temps a chaque pitstop
+double ourRandom(double truc);
+double tempsParSecteur(double tempsSecteurMin, double tempsSecteurMax);
+>>>>>>> a05ca4e0f040cb1b2cb3d7bef42f6840c8046c32
 
 #endif
 
