@@ -19,40 +19,6 @@ void tConvert (struct timeConvert *t, double nbr){
 
 
 
-
-/*
-Convertir le temps en seconde, milliseconde, microseconde:
-sample in (tps en sec avec 6 decimales):
-35.403019
-*/
-/*
-
-int timeConvert(double time, struct TimeClass *timeConverti) { 
-	int tempsSeconde, tempsMilliseconde, tempsMicroseconde;
-	int i = 0;
-	for (i ; i < (int) time ; i++) {
-		tempsSeconde += 1;	
-	{
- 
-       // Etape de conversion
-       tempsMilliseconde = tempsSeconde  MILLISECS_PAR_SEC;
-       tempsMicroseconde = tempsSeconde % MICROSECS_PAR_SEC;
- 
-       // Affiche les temps convertis 
-       printf("\n%d day(s), %d hour(s), %d minute(s), and %d second(s).\n", days, hours, minutes, seconds);
-       return 0;
-}
-
-*/
-/*
-sample out: 
-tempsMilliseconde
-tempsMicroseconde
-*/
-
-
-
-
 //double ourRandom(double truc);
 
 /*int main(int argc, char* argv[]){
