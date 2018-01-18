@@ -1,4 +1,4 @@
-CC=gcc -Wall -Werror -std=gnu99
+CC=gcc -Wall -Werror -std=gnu99 -lrt
 
 all : essai.o GP.o Qualification.o rand.o compareTo.o main.o circuit.o
 	$(CC) -o main essai.o GP.o Qualification.o rand.o compareTo.o circuit.o main.o

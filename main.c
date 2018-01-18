@@ -40,7 +40,7 @@ int main (int argc, char* argv[]){
 			voitRoule(tabVoit[i], circuit);
 			exit(0);
 		}
-		else if(pids[i] > 0 && i==20){
+		else if(pids[i] > 0){
 			printf("j'affiche \n");
 
 		}
