@@ -28,7 +28,7 @@ int main (int argc, char* argv[]){
 	}
 	pid_t pids[20];
 	int i;
-	for(i ; i<21 ; i++){
+	for(i=0 ; i<21 ; i++){
 		srand(time(NULL)^getpid()<<20);
 		usleep(5000000);
 		if((pids[i]=fork())<0){
