@@ -49,13 +49,19 @@ int main (int argc, char* argv[]){
 			perror("fork");
 		}
 		else if(pids[i] == 0 && i<20){
-			printf("voiture numéro %d \n", classement->tabClass[i]->numVoiture);
+			//printf("voiture numéro %d \n", classement->tabClass[i]->numVoiture);
+			int fdFils = shm_open("/MyMemory", O_RDWR, S_IRUSR | S_IWUSR);
 			voitRoule(classement->tabClass[i], circuit);
+			close(fdFils);
 			exit(0);
 		}
 		else if(pids[i] > 0){
-			printf("j'affiche \n");
-
+			int fdPere = shm_open("/MyMemory", O_RDWR, S_IRUSR);
+			int a;
+			for(a=0 ; a<20 ; a++){ 
+				printf("voiture %d \n", classement->tabClass[a]->numVoiture);
+			}
+			close(fdPere);
 		}
 	}
 	return 1;
