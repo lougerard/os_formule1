@@ -14,6 +14,8 @@
 #include "rand.h"
 #include "essai.h"
 #include "circuit.c"
+void afficheLigne(struct Voiture* voit);
+
 
 int main (int argc, char* argv[]){
 
@@ -59,10 +61,16 @@ int main (int argc, char* argv[]){
 			int fdPere = shm_open("/MyMemory", O_RDWR, S_IRUSR);
 			int a;
 			for(a=0 ; a<20 ; a++){ 
-				printf("voiture %d \n", classement->tabClass[a]->numVoiture);
+			//	printf("voiture %d \n", classement->tabClass[a]->numVoiture);
+				afficheLigne(classement->tabClass[a]);
 			}
 			close(fdPere);
 		}
 	}
 	return 1;
+}
+
+
+void afficheLigne(struct Voiture* voit) {
+	printf("||%i	|%f	|%f	|%f	|%f	|%i	|%i	||", voit->numVoiture, voit->tempsSecteur1, voit->tempsSecteur2, voit->tempsSecteur3, voit->tempsActuel, voit->nbrPitstop, voit->nbrTour);
 }
