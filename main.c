@@ -9,7 +9,6 @@
 #include "rand.h"
 #include "essai.h"
 #include "circuit.c"
-#include "GP.c"
 
 int main (int argc, char* argv[]){
 
@@ -28,9 +27,7 @@ int main (int argc, char* argv[]){
 		tabVoit[j] = voit;
 	}
 	pid_t pids[20];
-	int n = 20;
-	int i = 0;
-	int a = 0;
+	int i;
 	for(i ; i<21 ; i++){
 		srand(time(NULL)^getpid()<<20);
 		usleep(5000000);
