@@ -9,44 +9,46 @@
 #include "rand.h"
 #include "essai.h"
 #include "circuit.c"
-/*
+#include "GP.c"
+
 int main (int argc, char* argv[]){
-	fils(3);
-	return 0;
-}*/
-/* 	srand(time(NULL));
+
 	struct Circuit *circuit = malloc(sizeof(struct Circuit));
-	circuit->secteur1Min = 30.0;
-	circuit->secteur1Max = 40.0;
+	circuit->secteur1Min = 10.0;
+	circuit->secteur1Max = 20.0;
 	circuit->secteur2Min = 25.0;
 	circuit->secteur2Max = 35.0;
 	circuit->secteur3Min = 35.0;
 	circuit->secteur3Max = 40.0;
 	struct Voiture* tabVoit[20];
 	int j;
-	for( j = 0 ; j<2 ; j++){
+	for( j = 0 ; j<20 ; j++){
 		struct Voiture *voit = malloc(sizeof (struct Voiture));
-		voit->numVoiture=j;
+		voit->numVoiture=j+1;
 		tabVoit[j] = voit;
 	}
-	pid_t pids[2];
-	int n = 2;
-	int i;
-	for( i = 0 ; i<n ; i++){
-		if((pids[i] = fork())<0){
-			perror("fork error");
+	pid_t pids[20];
+	int n = 20;
+	int i = 0;
+	int a = 0;
+	for(i ; i<21 ; i++){
+		srand(time(NULL)^getpid()<<20);
+		usleep(5000000);
+		if((pids[i]=fork())<0){
+			perror("fork");
 		}
-		else {
-			if(i!=0){
-				printf("Voiture numero %d \n", tabVoit[i]->numVoiture);
-				//voitRoule(tabVoit[i], circuit);
-			}
+		else if(pids[i] == 0 && i<20){
+			printf("voiture numéro %d \n", tabVoit[i]->numVoiture);
+			voitRoule(tabVoit[i], circuit);
+			exit(0);
 		}
-		printf("Voiture numero %d \n", tabVoit[i]->numVoiture);
+		else if(pids[i] > 0 && i==20){
+			printf("j'affiche \n");
+		}
 	}
 	return 1;
-}*/
-int  tube[2]; 
+}
+/*int  tube[2]; 
 void fils(int n) {
     char buf;
     short pid = getpid();
@@ -111,15 +113,6 @@ int main(int argc, char ** argv) {
             	}
 	}while(pid != 0 && numLect <= nbLect);
         	return 0; 
- }
+ }*/
     
 
-/*int main(int argc, char* argv[]){
-
-//printf("%f", ourRandom(1.2));
-return 0;
-}*/
-
-void afficheLigne(int numVoiture, double tempsSecteur1, double tempsSecteur2, double tempsSecteur3, double tempsActuel, int nbrPitstop, int nbrTour){
-	printf("||%i     |%f      |%f     |%f   |%f      |%i     |%i     ||", numVoiture, 		tempsSecteur1, tempsSecteur2, tempsSecteur3, tempsActuel, nbrPitstop, nbrTour);
-}
