@@ -10,10 +10,15 @@
 #include <sys/mman.h>
 #include <time.h>
 #include <stdlib.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 #include <string.h>
 #include "rand.h"
 #include "essai.h"
 #include "circuit.c"
+
+#define NBVOITURE 20
+
 void afficheLigne(struct Voiture* voit, int a);
 
 
@@ -36,36 +41,40 @@ int main (int argc, char* argv[]){
 		classement->tabClass[j] = voit;
 		classement->position[j] = j+1;
 	}
-	int fd;
-	fd = shm_open("/MyMemory", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
-	void* sharedMemory = mmap(NULL, sizeof(struct Classement), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-	if(sharedMemory == MAP_FAILED){
-		printf("erreur map");
-	} 
+	key_t key=9876;
+	int shmid, size;
+	size = sizeof(struct Voiture) * NBVOITURE;
+	shmid = shmget(9876, size, IPC_CREAT | 0666);
 	pid_t pids[20];
 	int i;
 	for( i=0 ; i<21 ; i++ ){
-		srand(time(NULL)^getpid()<<20);
+		//srand(time(NULL)^getpid()<<20);
 		usleep(5000000);
 		if((pids[i]=fork())<0){
 			perror("fork");
 		}
-		else if(pids[i] == 0 && i<20){
+		else if(pids[i] == 0){
+			printf("shmid fils %i \n", shmid);
+			printf("shmat fils %i \n", (struct Classement *) shmat(shmid, NULL, 0));
+ 			classement = (struct Classement *) shmat(shmid, NULL, 0);
+			printf("%p \n", classement);
 			//printf("voiture numéro %d \n", classement->tabClass[i]->numVoiture);
-			int fdFils = shm_open("/MyMemory", O_RDWR, S_IRUSR | S_IWUSR);
 			voitRoule(classement->tabClass[i], circuit);
-			printf("%f", (classement->tabClass[i])->tempsSecteur1);
-			close(fdFils);
+			//printf("%f", (classement->tabClass[i])->tempsSecteur3);
 			exit(0);
 		}
-		else if(pids[i] > 0){
-			int fdPere = shm_open("/MyMemory", O_RDWR, S_IRUSR);
+		//printf("%f \n", classement->tabClass[0]->tempsSecteur1);
+		if(pids[i] > 0){
+			int shmidPere;
+			shmidPere = shmget(key, size, 0666);
+			printf("shmid pere %i \n", shmidPere);
+			printf("shmat pere %i \n", shmat(shmidPere, NULL,0));
+			classement = shmat(shmidPere, NULL, 0);
 			int a;
 			for(a=0 ; a<20 ; a++){ 
 			//	printf("voiture %d \n", classement->tabClass[a]->numVoiture);
 				afficheLigne(classement->tabClass[a], a);
 			}
-			close(fdPere);
 		}
 	}
 	return 1;
