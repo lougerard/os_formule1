@@ -14,7 +14,7 @@
 #include "rand.h"
 #include "essai.h"
 #include "circuit.c"
-void afficheLigne(struct Voiture* voit);
+void afficheLigne(struct Voiture* voit, int a);
 
 
 int main (int argc, char* argv[]){
@@ -54,6 +54,7 @@ int main (int argc, char* argv[]){
 			//printf("voiture numéro %d \n", classement->tabClass[i]->numVoiture);
 			int fdFils = shm_open("/MyMemory", O_RDWR, S_IRUSR | S_IWUSR);
 			voitRoule(classement->tabClass[i], circuit);
+			printf("%f", (classement->tabClass[i])->tempsSecteur1);
 			close(fdFils);
 			exit(0);
 		}
@@ -62,7 +63,7 @@ int main (int argc, char* argv[]){
 			int a;
 			for(a=0 ; a<20 ; a++){ 
 			//	printf("voiture %d \n", classement->tabClass[a]->numVoiture);
-				afficheLigne(classement->tabClass[a]);
+				afficheLigne(classement->tabClass[a], a);
 			}
 			close(fdPere);
 		}
@@ -71,6 +72,6 @@ int main (int argc, char* argv[]){
 }
 
 
-void afficheLigne(struct Voiture* voit) {
-	printf("||%i	|%f	|%f	|%f	|%f	|%i	|%i	||", voit->numVoiture, voit->tempsSecteur1, voit->tempsSecteur2, voit->tempsSecteur3, voit->tempsActuel, voit->nbrPitstop, voit->nbrTour);
+void afficheLigne(struct Voiture* voit, int a) {
+	printf("||%i  |%i	|%f	|%f	|%f	|%f	|%i	|%i	||\n", a+1, voit->numVoiture, voit->tempsSecteur1, voit->tempsSecteur2, voit->tempsSecteur3, voit->tempsActuel, voit->nbrPitstop, voit->nbrTour);
 }
