@@ -19,7 +19,7 @@
 
 #define NBVOITURE 20
 
-void afficheLigne(struct Voiture* voit, int a);
+void afficheLigne(struct Voiture voit, int a);
 
 
 int main (int argc, char* argv[]){
@@ -36,12 +36,13 @@ int main (int argc, char* argv[]){
 	circuit->secteur3Max = 40.0;
 	int j;
 	for( j=0 ; j<20 ; j++ ){
-		struct Voiture *voit = malloc(sizeof (struct Voiture));
-		voit->numVoiture = numeroVoitures[j];
+		struct Voiture voit;
+		voit.numVoiture = numeroVoitures[j];
 		classement->tabClass[j] = voit;
 		classement->position[j] = j+1;
 	}
 	key_t key=9876;
+	const void *shmaddr = (const void *) 99999;
 	int shmid, size;
 	size = sizeof(struct Voiture) * NBVOITURE;
 	shmid = shmget(9876, size, IPC_CREAT | 0666);
@@ -55,9 +56,9 @@ int main (int argc, char* argv[]){
 		}
 		else if(pids[i] == 0){
 			printf("shmid fils %i \n", shmid);
-			printf("shmat fils %i \n", (struct Classement *) shmat(shmid, NULL, 0));
- 			classement = (struct Classement *) shmat(shmid, NULL, 0);
+			printf("shmat fils %i \n", (struct Classement *) shmat(shmid, shmaddr, SHM_RND));
 			printf("%p \n", classement);
+			classement = (struct Classement *) shmat(shmid, shmaddr, SHM_W);
 			//printf("voiture numéro %d \n", classement->tabClass[i]->numVoiture);
 			voitRoule(classement->tabClass[i], circuit);
 			//printf("%f", (classement->tabClass[i])->tempsSecteur3);
@@ -68,8 +69,8 @@ int main (int argc, char* argv[]){
 			int shmidPere;
 			shmidPere = shmget(key, size, 0666);
 			printf("shmid pere %i \n", shmidPere);
-			printf("shmat pere %i \n", shmat(shmidPere, NULL,0));
-			classement = shmat(shmidPere, NULL, 0);
+			printf("shmat pere %i \n", shmat(shmidPere, shmaddr, SHM_RND));
+			classement = shmat(shmidPere, shmaddr, SHM_W);
 			int a;
 			for(a=0 ; a<20 ; a++){ 
 			//	printf("voiture %d \n", classement->tabClass[a]->numVoiture);
@@ -81,6 +82,6 @@ int main (int argc, char* argv[]){
 }
 
 
-void afficheLigne(struct Voiture* voit, int a) {
-	printf("||%i  |%i	|%f	|%f	|%f	|%f	|%i	|%i	||\n", a+1, voit->numVoiture, voit->tempsSecteur1, voit->tempsSecteur2, voit->tempsSecteur3, voit->tempsActuel, voit->nbrPitstop, voit->nbrTour);
+void afficheLigne(struct Voiture voit, int a) {
+	printf("||%i     |%i	|%f	|%f	|%f	|%f	|%i	|%i	||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
 }
