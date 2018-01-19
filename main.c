@@ -33,6 +33,9 @@ int main (int argc, char* argv[]){
 	circuit->secteur2Max = 35.0;
 	circuit->secteur3Min = 35.0;
 	circuit->secteur3Max = 40.0;
+	circuit->meilleurSecteur1 = 0.0;
+	circuit->meilleurSecteur2 = 0.0;
+	circuit->meilleurSecteur3 = 0.0;
 	key_t key=9876;
 	int shmid, size;
 	//struct shmid_ds *buf;
@@ -92,19 +95,35 @@ int main (int argc, char* argv[]){
 			for(a=0 ; a<20 ; a++){ 
 				//printf("voiture %d \n", classement->tabClass[a]->numVoiture);
 				if (a==0) {
-					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_actuel	|nbrPit		|nbrTour||\n");
-					printf("----------------------------------------------------------------------------------------------------------\n");
+					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour||\n");
+					printf("-------------------------------------------------------------------------------------------------------------------------\n");
 				}
 				
 				trieTab(classement);					
 				afficheLigne(classement->tabClass[a], a);
 			}
 			//affiche(classement->tabClass);
+			struct timeConvert *time = malloc(sizeof(struct timeConvert));
+        tConvert(time,(classement->tabClass[0]).tempsActuel);
+        int min = time->min;
+        int sec = time->tSec;
+        int milli = time->tMilliSec;
+
+        printf("\n||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i  	|%i		|%i	||\n", 0, 0, circuit->meilleurSecteur1, circuit->meilleurSecteur2, circuit->meilleurSecteur3, circuit->meilleurTour, min, sec, milli, 0, 0);
+
 			printf("\n");
 			shmdt(classement);
 		}
 	}
 	}
+	//struct timeConvert *time = malloc(sizeof(struct timeConvert));
+        //tConvert(time,(classement->tabClass[0]).tempsActuel);
+        //int min = time->min;
+        //int sec = time->tSec;
+        //int milli = time->tMilliSec;
+
+	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i:%i:%i       |%i             |%i     ||\n", 0, 0, circuit->meilleurSecteur1, circuit->meilleurSecteur2, circuit->meilleurSecteur3, circuit->meilleurTour, min, sec, milli, 0, 0);
+
 	shmdt(classement);
 	return 1;
 }
@@ -115,7 +134,8 @@ void afficheLigne(struct Voiture voit, int a) {
 	int min = time->min;
 	int sec = time->tSec;
 	int milli = time->tMilliSec;
-	printf("||%i     |%i	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i	||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3,min, sec, milli, voit.nbrPitstop, voit.nbrTour);
+	double tps = voit.tempsSecteur1 + voit.tempsSecteur2 + voit.tempsSecteur3;
+	printf("||%i     |%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i	||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, tps, min, sec, milli, voit.nbrPitstop, voit.nbrTour);
 	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
 }
        

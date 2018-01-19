@@ -45,6 +45,7 @@ struct Circuit {
     int numVoitureS2;        //Num. de la voiture la plus rapide S2
     double meilleurSecteur3;    //Meilleur temps secteur 3
     int numVoitureS3;        //Num. de la voiture la plus rapide S3
+    double meilleurTour;
     };
 struct Pitstop {
     double pistopMin;        //Temps minimum du pitstop

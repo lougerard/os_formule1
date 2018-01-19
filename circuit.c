@@ -50,6 +50,10 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		if(circuit->meilleurSecteur3 > voiture.tempsSecteur3){
 			circuit->meilleurSecteur3 = voiture.tempsSecteur3;
 		}
+		double mTps = voiture.tempsSecteur1 + voiture.tempsSecteur2 + voiture.tempsSecteur3;
+		if (mTps < circuit-> meilleurTour) {
+			circuit->meilleurTour = mTps;
+		}
 		//printf("sec3 %f\n", voiture->tempsSecteur3);
 		//usleep(300000);
 		voiture.nbrTour = voiture.nbrTour + 1;	
