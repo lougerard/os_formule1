@@ -21,6 +21,14 @@ struct Voiture {
     double tempsActuel;        //Somme des secteurs (et pitstop) en temps réel
 
     int nbrTour;            //Nombre de tour effectué par une voiture
+
+    double meilleurSecteur1;    //Meilleur temps secteur 1
+    int numVoitureS1;        //Num. de la voiture la plus rapide S1
+    double meilleurSecteur2;    //Meilleur temps secteur 2
+    int numVoitureS2;        //Num. de la voiture la plus rapide S2
+    double meilleurSecteur3;    //Meilleur temps secteur 3
+    int numVoitureS3;        //Num. de la voiture la plus rapide S3
+    double meilleurTour;
     };
 
 struct timeConvert {
@@ -38,15 +46,8 @@ struct Circuit {
 
     double secteur3Min;        //Temps minimum secteur 3
     double secteur3Max;        //Temps minimum secteur 3
-
-    double meilleurSecteur1;    //Meilleur temps secteur 1
-    int numVoitureS1;        //Num. de la voiture la plus rapide S1
-    double meilleurSecteur2;    //Meilleur temps secteur 2
-    int numVoitureS2;        //Num. de la voiture la plus rapide S2
-    double meilleurSecteur3;    //Meilleur temps secteur 3
-    int numVoitureS3;        //Num. de la voiture la plus rapide S3
-    double meilleurTour;
     };
+
 struct Pitstop {
     double pistopMin;        //Temps minimum du pitstop
     double pistopMax;        //Temps maximum du pitstop

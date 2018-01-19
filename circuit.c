@@ -15,16 +15,16 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		//printf("Tour : %d\n", i);
 		voiture.tempsSecteur1 = tempsParSecteur(circuit->secteur1Min, circuit->secteur1Max);
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur1;
-		if(circuit->meilleurSecteur1 > voiture.tempsSecteur1){
-			circuit->meilleurSecteur1 = voiture.tempsSecteur1;
-		}
+		//if(voiture.meilleurSecteur1 > voiture.tempsSecteur1){
+		//	voiture.meilleurSecteur1 = voiture.tempsSecteur1;
+		//}
 		//printf("sec1 %f\n", voiture.tempsSecteur1);
 		//usleep(300000);
 		voiture.tempsSecteur2 = tempsParSecteur(circuit->secteur2Min, circuit->secteur2Max);
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur2;
-		if(circuit->meilleurSecteur2 > voiture.tempsSecteur2){
-			circuit->meilleurSecteur2 = voiture.tempsSecteur2;
-		}
+		//if(voiture.meilleurSecteur2 > voiture.tempsSecteur2){
+		//	voiture.meilleurSecteur2 = voiture.tempsSecteur2;
+		//}
 		//printf("sec2 %f\n", voiture->tempsSecteur2);
 		//usleep(300000);
 		voiture.tempsSecteur3 = tempsParSecteur(circuit->secteur3Min, circuit->secteur3Max);
@@ -35,25 +35,25 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
                         voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
 			voiture.pitstop = 1;
                 }
-		if (voiture.nbrTour == 4 && voiture.nbrPitstop < 1 && pit != 1) {
+		if (voiture.nbrTour == 20 && voiture.nbrPitstop < 1 && pit != 1) {
 			voiture.nbrPitstop = voiture.nbrPitstop + 1;
                         voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
                         voiture.pitstop = 1;
 		}
-		if (voiture.nbrTour == 8 && voiture.nbrPitstop < 2 && pit != 1) {
+		if (voiture.nbrTour == 35 && voiture.nbrPitstop < 2 && pit != 1) {
                         voiture.nbrPitstop = voiture.nbrPitstop + 1;
                         voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
                         voiture.pitstop = 1;
                 }
 
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur3;
-		if(circuit->meilleurSecteur3 > voiture.tempsSecteur3){
-			circuit->meilleurSecteur3 = voiture.tempsSecteur3;
-		}
-		double mTps = voiture.tempsSecteur1 + voiture.tempsSecteur2 + voiture.tempsSecteur3;
-		if (mTps < circuit-> meilleurTour) {
-			circuit->meilleurTour = mTps;
-		}
+		//if(circuit.meilleurSecteur3 > voiture.tempsSecteur3){
+		//	voiture.meilleurSecteur3 = voiture.tempsSecteur3;
+		//}
+		//double mTps = voiture.tempsSecteur1 + voiture.tempsSecteur2 + voiture.tempsSecteur3;
+		//if (mTps < voiture.meilleurTour) {
+		//	voiture.meilleurTour = mTps;
+		//}
 		//printf("sec3 %f\n", voiture->tempsSecteur3);
 		//usleep(300000);
 		voiture.nbrTour = voiture.nbrTour + 1;	
@@ -63,7 +63,7 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 
 int pitstop(){
 	double rand = ourRandom(14.0);
-	if(rand>=5.0 && rand<=7.0){
+	if(rand>=5.0 && rand<=5.5){
 		return 1;
 	}
 	return 0;
