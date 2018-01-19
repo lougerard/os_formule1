@@ -68,7 +68,7 @@ struct Course {
 
 struct Classement {
     int position[20];            //Position de la voiture
-    struct Voiture* tabClass[20];    //Tableau contenant le classement
+    struct Voiture tabClass[20];    //Tableau contenant le classement
     };
 
 double ourRandom(double truc);
