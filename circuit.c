@@ -9,7 +9,7 @@ int pitstop();
 
 struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 
-	int i;
+	
 	voiture.pitstop = 0;
 	//int status = 500000;
 		//printf("Tour : %d\n", i);

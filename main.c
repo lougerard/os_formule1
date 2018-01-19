@@ -34,12 +34,11 @@ int main (int argc, char* argv[]){
 	circuit->secteur3Min = 35.0;
 	circuit->secteur3Max = 40.0;
 	key_t key=9876;
-	const void *shmaddr = (const void *) 99999;
 	int shmid, size;
-	struct shmid_ds *buf;
+	//struct shmid_ds *buf;
 	size = sizeof(struct Voiture) * NBVOITURE;
 	shmid = shmget(9876, size, IPC_CREAT | 0666);
-	shmctl(shmid, IPC_RMID, buf);
+	//shmctl(shmid, IPC_RMID, buf);
 	shmid = shmget(9876, size, IPC_CREAT | 0666);
 	pid_t pids[20];
 	int i;
