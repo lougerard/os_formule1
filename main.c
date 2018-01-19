@@ -20,7 +20,7 @@
 #define NBVOITURE 20
 
 void afficheLigne(struct Voiture voit, int a);
-
+void trieTab(struct Classement *classement);
 
 int main (int argc, char* argv[]){
 
@@ -68,7 +68,9 @@ int main (int argc, char* argv[]){
 			if (k > 1) {
 				voitureCourante = classement->tabClass[i];
 			}
-			voitureCourante.numVoiture = numeroVoitures[i];
+			if (k == 1) {
+				voitureCourante.numVoiture = numeroVoitures[i];
+			}
 			voitureCourante.nbrTour = k - 1;
 			classement->tabClass[i] = voitRoule(voitureCourante, circuit);
 			//shmctl(shmid, IPC_SET, buf);
@@ -94,17 +96,18 @@ int main (int argc, char* argv[]){
 					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_actuel	|nbrPit		|nbrTour||\n");
 					printf("----------------------------------------------------------------------------------------------------------\n");
 				}
+				
+				trieTab(classement);					
 				afficheLigne(classement->tabClass[a], a);
 			}
 			printf("\n");
-			//shmdt(classement);
+			shmdt(classement);
 		}
 	}
 	}
 	shmdt(classement);
 	return 1;
 }
-
 
 void afficheLigne(struct Voiture voit, int a) {
 	struct timeConvert *time = malloc(sizeof(struct timeConvert));
@@ -114,5 +117,15 @@ void afficheLigne(struct Voiture voit, int a) {
 	int milli = time->tMilliSec;
 	printf("||%i     |%i	|%f	|%f	|%f	|%i:%i:%i	|%i	|%i	||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3,min, sec, milli, voit.nbrPitstop, voit.nbrTour);
 	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
+}
+void trieTab(struct Classement *class) {
+	struct Classement copie = malloc(sizeof(struct Classement));
+	int m;
+	int k;
+	for (m=0; m<20; m++) {
+		copie.position[m] = class->position[m];
+		
+	}
+	
 
 }
