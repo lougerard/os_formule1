@@ -9,7 +9,6 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 
 	int i;
 	//int status = 500000;
-	for(i=1 ; i<11 ; i++){
 		//printf("Tour : %d\n", i);
 		voiture.tempsSecteur1 = tempsParSecteur(circuit->secteur1Min, circuit->secteur1Max);
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur1;
@@ -33,6 +32,6 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		//printf("sec3 %f\n", voiture->tempsSecteur3);
 		//usleep(300000);
 		voiture.nbrTour = voiture.nbrTour + 1;	
-	}
+	
 	return voiture;
 }
