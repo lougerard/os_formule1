@@ -5,6 +5,8 @@
 #include <sys/wait.h>
 #include "essai.c"
 
+int pitstop();
+
 struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 
 	int i;
@@ -25,6 +27,12 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		//printf("sec2 %f\n", voiture->tempsSecteur2);
 		//usleep(300000);
 		voiture.tempsSecteur3 = tempsParSecteur(circuit->secteur3Min, circuit->secteur3Max);
+		int pit = pitstop();
+                if(pit == 1){
+                        voiture.nbrPitstop = voiture.nbrPitstop + 1;
+                        voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
+                }
+
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur3;
 		if(circuit->meilleurSecteur3 > voiture.tempsSecteur3){
 			circuit->meilleurSecteur3 = voiture.tempsSecteur3;
@@ -34,4 +42,12 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		voiture.nbrTour = voiture.nbrTour + 1;	
 	
 	return voiture;
+}
+
+int pitstop(){
+	double rand = ourRandom(14.0);
+	if(rand>=5.0 && rand<=7.0){
+		return 1;
+	}
+	return 0;
 }
