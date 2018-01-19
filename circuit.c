@@ -15,16 +15,16 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		//printf("Tour : %d\n", i);
 		voiture.tempsSecteur1 = tempsParSecteur(circuit->secteur1Min, circuit->secteur1Max);
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur1;
-		if(circuit->meilleurSecteur1 > voiture.tempsSecteur1){
-			circuit->meilleurSecteur1 = voiture.tempsSecteur1;
-		}
+		//if(voiture.meilleurSecteur1 > voiture.tempsSecteur1){
+		//	voiture.meilleurSecteur1 = voiture.tempsSecteur1;
+		//}
 		//printf("sec1 %f\n", voiture.tempsSecteur1);
 		//usleep(300000);
 		voiture.tempsSecteur2 = tempsParSecteur(circuit->secteur2Min, circuit->secteur2Max);
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur2;
-		if(circuit->meilleurSecteur2 > voiture.tempsSecteur2){
-			circuit->meilleurSecteur2 = voiture.tempsSecteur2;
-		}
+		//if(voiture.meilleurSecteur2 > voiture.tempsSecteur2){
+		//	voiture.meilleurSecteur2 = voiture.tempsSecteur2;
+		//}
 		//printf("sec2 %f\n", voiture->tempsSecteur2);
 		//usleep(300000);
 		voiture.tempsSecteur3 = tempsParSecteur(circuit->secteur3Min, circuit->secteur3Max);
@@ -47,13 +47,13 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
                 }
 
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur3;
-		if(circuit->meilleurSecteur3 > voiture.tempsSecteur3){
-			circuit->meilleurSecteur3 = voiture.tempsSecteur3;
-		}
-		double mTps = voiture.tempsSecteur1 + voiture.tempsSecteur2 + voiture.tempsSecteur3;
-		if (mTps < circuit-> meilleurTour) {
-			circuit->meilleurTour = mTps;
-		}
+		//if(circuit.meilleurSecteur3 > voiture.tempsSecteur3){
+		//	voiture.meilleurSecteur3 = voiture.tempsSecteur3;
+		//}
+		//double mTps = voiture.tempsSecteur1 + voiture.tempsSecteur2 + voiture.tempsSecteur3;
+		//if (mTps < voiture.meilleurTour) {
+		//	voiture.meilleurTour = mTps;
+		//}
 		//printf("sec3 %f\n", voiture->tempsSecteur3);
 		//usleep(300000);
 		voiture.nbrTour = voiture.nbrTour + 1;	
