@@ -24,9 +24,10 @@ struct Voiture {
     };
 
 struct timeConvert {
-    int tSec;
-    int tMilliSec;
-    };
+	int min;
+    	int tSec;
+	int tMilliSec;
+};
 
 struct Circuit {
     double secteur1Min;        //Temps minimum secteur 1
@@ -68,7 +69,7 @@ struct Course {
 
 struct Classement {
     int position[20];            //Position de la voiture
-    struct Voiture* tabClass[20];    //Tableau contenant le classement
+    struct Voiture tabClass[20];    //Tableau contenant le classement
     };
 
 double ourRandom(double truc);
