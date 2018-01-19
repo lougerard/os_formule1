@@ -10,6 +10,7 @@ int pitstop();
 struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 
 	int i;
+	voiture.pitstop = 0;
 	//int status = 500000;
 		//printf("Tour : %d\n", i);
 		voiture.tempsSecteur1 = tempsParSecteur(circuit->secteur1Min, circuit->secteur1Max);
@@ -27,10 +28,22 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		//printf("sec2 %f\n", voiture->tempsSecteur2);
 		//usleep(300000);
 		voiture.tempsSecteur3 = tempsParSecteur(circuit->secteur3Min, circuit->secteur3Max);
-		int pit = pitstop();
+		int pit =  0 ;
+		pit = pitstop();
                 if(pit == 1){
                         voiture.nbrPitstop = voiture.nbrPitstop + 1;
                         voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
+			voiture.pitstop = 1;
+                }
+		if (voiture.nbrTour == 4 && voiture.nbrPitstop < 1 && pit != 1) {
+			voiture.nbrPitstop = voiture.nbrPitstop + 1;
+                        voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
+                        voiture.pitstop = 1;
+		}
+		if (voiture.nbrTour == 8 && voiture.nbrPitstop < 2 && pit != 1) {
+                        voiture.nbrPitstop = voiture.nbrPitstop + 1;
+                        voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
+                        voiture.pitstop = 1;
                 }
 
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur3;
