@@ -100,8 +100,9 @@ int main (int argc, char* argv[]){
 			for(a=0 ; a<20 ; a++){ 
 				//printf("voiture %d \n", classement->tabClass[a]->numVoiture);
 				if (a==0) {
+					printf("--------------------------------------------------------------------------------------------------------------------------\n");
 					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour||\n");
-					printf("-------------------------------------------------------------------------------------------------------------------------\n");
+					printf("--------------------------------------------------------------------------------------------------------------------------\n");
 				}
 				trieTab(classement);					
 				afficheLigne(classement->tabClass[a], a);
@@ -128,9 +129,16 @@ int main (int argc, char* argv[]){
         		int min = time->min;
         		int sec = time->tSec;
         		int milli = time->tMilliSec;
+			printf("--------------------------------------------------------------------------------------------------------------------------\n");
+			printf("||						MEILLEURS TEMPS TOUR							||\n");
+			printf("--------------------------------------------------------------------------------------------------------------------------");
         		printf("\n||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i  	|%i		|%i	||\n", 0, 0, meilleurSecteur1, meilleurSecteur2, meilleurSecteur3, meilleurT, min, sec, milli, 0, 0);
-			printf("\n||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i	||\n", 0, 0, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG, min, sec, milli, 0, 0);
+			printf("--------------------------------------------------------------------------------------------------------------------------\n");
+			printf("||						MEILLEURS TEMPS GENERAL							||\n");
+			printf("--------------------------------------------------------------------------------------------------------------------------\n");
 
+			printf("||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i	||\n", 0, 0, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG, min, sec, milli, 0, 0);
+			printf("--------------------------------------------------------------------------------------------------------------------------\n");
 			printf("\n");
 			shmdt(classement);
 		}
