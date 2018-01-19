@@ -42,7 +42,7 @@ int main (int argc, char* argv[]){
 	struct shmid_ds *buf;
 	pid_t pids[20];
 	int i;
-	for( i=0 ; i<20 ; i++ ){
+	for( i=0 ; i<21 ; i++ ){
 		srand(time(NULL)^getpid()<<20);
 		usleep(1000000);
 		if((pids[i]=fork())<0){
@@ -56,13 +56,14 @@ int main (int argc, char* argv[]){
 			//printf("voiture numéro %d \n", classement->tabClass[i]->numVoiture);
 			struct Voiture voitureCourante;
 			voitureCourante.numVoiture = numeroVoitures[i];
-			voitureCourante = voitRoule(classement->tabClass[i], circuit);
+			classement->tabClass[i] = voitRoule(voitureCourante, circuit);
 			shmctl(shmid, IPC_SET, buf);
-			//shmdt(classement);
+			shmdt(classement);
 			//printf("%f", (classement->tabClass[i].tempsSecteur1));
 			//int a = 1; 
                         //printf("voiture %d \n", classement->tabClass[a]->numVoiture);
                         //afficheLigne(voitureCourante, i);
+                        //afficheLigne(classement->tabClass[i],i);
                         exit(0);
 		}
 		//printf("%f \n", classement->tabClass[0]->tempsSecteur1);
@@ -75,6 +76,10 @@ int main (int argc, char* argv[]){
 			int a = 1;
 			for(a=0 ; a<20 ; a++){ 
 				//printf("voiture %d \n", classement->tabClass[a]->numVoiture);
+				if (a==0) {
+					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_actuel	|nbrPitstop	|nbrTour||\n");
+					printf("----------------------------------------------------------------------------------------------------------\n");
+				}
 				afficheLigne(classement->tabClass[a], a);
 			}
 			printf("\n");
@@ -86,5 +91,12 @@ int main (int argc, char* argv[]){
 
 
 void afficheLigne(struct Voiture voit, int a) {
-	printf("||%i     |%i	|%f	|%f	|%f	|%f	|%i	|%i	||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
+	struct timeConvert *time = malloc(sizeof(struct timeConvert));
+	tConvert(time, voit.tempsActuel);
+	int min = time->min;
+	int sec = time->tSec;
+	int milli = time->tMilliSec;
+	printf("||%i     |%i	|%f	|%f	|%f	|%i:%i:%i	|%i	|%i	||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3,min, sec, milli, voit.nbrPitstop, voit.nbrTour);
+	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
+
 }

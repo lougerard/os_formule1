@@ -11,9 +11,15 @@
 // convertisseur 2e forme d ecriture
 void tConvert (struct timeConvert *t, double nbr){
 	int sec = (int) nbr;
-	int milli = (int) (nbr - sec) * 1000;
+	int milli = (int) ((nbr - sec) * 1000);
+	int min = 0;
+	while (sec >= 60) {
+		sec = sec - 60;
+		min = min +1;	
+	}
 	t->tSec = sec;
 	t->tMilliSec = milli;
+	t->min = min;
 }
 
 

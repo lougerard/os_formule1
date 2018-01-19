@@ -24,9 +24,10 @@ struct Voiture {
     };
 
 struct timeConvert {
-    int tSec;
-    int tMilliSec;
-    };
+	int min;
+    	int tSec;
+	int tMilliSec;
+};
 
 struct Circuit {
     double secteur1Min;        //Temps minimum secteur 1
