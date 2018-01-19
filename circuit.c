@@ -15,7 +15,7 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		if(circuit->meilleurSecteur1 > voiture.tempsSecteur1){
 			circuit->meilleurSecteur1 = voiture.tempsSecteur1;
 		}
-		//printf("sec1 %f\n", voiture->tempsSecteur1);
+		//printf("sec1 %f\n", voiture.tempsSecteur1);
 		//usleep(300000);
 		voiture.tempsSecteur2 = tempsParSecteur(circuit->secteur2Min, circuit->secteur2Max);
 		if(circuit->meilleurSecteur2 > voiture.tempsSecteur2){
@@ -29,7 +29,7 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		}
 		//printf("sec3 %f\n", voiture->tempsSecteur3);
 		//usleep(300000);
-		printf("\n");
+		//printf("\n");
 	}
 	return voiture;
 }
