@@ -37,14 +37,22 @@ int main (int argc, char* argv[]){
 	key_t key=9876;
 	const void *shmaddr = (const void *) 99999;
 	int shmid, size;
+	struct shmid_ds *buf;
 	size = sizeof(struct Voiture) * NBVOITURE;
 	shmid = shmget(9876, size, IPC_CREAT | 0666);
-	struct shmid_ds *buf;
+	shmctl(shmid, IPC_RMID, buf);
+	shmid = shmget(9876, size, IPC_CREAT | 0666);
 	pid_t pids[20];
 	int i;
+	int k;
+	struct Voiture voitureCourante;
+	for( k=1; k < 11 ; k++) {
 	for( i=0 ; i<21 ; i++ ){
+		
 		srand(time(NULL)^getpid()<<20);
-		usleep(1000000);
+		if (k != 0) {
+			usleep(1000000);
+		}
 		if((pids[i]=fork())<0){
 			perror("fork");
 		}
@@ -54,11 +62,17 @@ int main (int argc, char* argv[]){
 			//printf("%p \n", classement);
 			classement = shmat(shmid, 0, 0);
 			//printf("voiture numéro %d \n", classement->tabClass[i]->numVoiture);
-			struct Voiture voitureCourante;
+			if (k == 1) {
+			//	printf("coucou k=0");
+			}
+			if (k > 1) {
+				voitureCourante = classement->tabClass[i];
+			}
 			voitureCourante.numVoiture = numeroVoitures[i];
+			voitureCourante.nbrTour = k - 1;
 			classement->tabClass[i] = voitRoule(voitureCourante, circuit);
-			shmctl(shmid, IPC_SET, buf);
-			shmdt(classement);
+			//shmctl(shmid, IPC_SET, buf);
+			//shmdt(classement);
 			//printf("%f", (classement->tabClass[i].tempsSecteur1));
 			//int a = 1; 
                         //printf("voiture %d \n", classement->tabClass[a]->numVoiture);
@@ -67,7 +81,7 @@ int main (int argc, char* argv[]){
                         exit(0);
 		}
 		//printf("%f \n", classement->tabClass[0]->tempsSecteur1);
-		else if(pids[i] > 0){
+		else if(pids[i] > 0 && i == 20){
 			int shmidPere;
 			shmidPere = shmget(key, size, 0666);
 			//printf("shmid pere %i \n", shmidPere);
@@ -77,15 +91,17 @@ int main (int argc, char* argv[]){
 			for(a=0 ; a<20 ; a++){ 
 				//printf("voiture %d \n", classement->tabClass[a]->numVoiture);
 				if (a==0) {
-					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_actuel	|nbrPitstop	|nbrTour||\n");
+					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_actuel	|nbrPit		|nbrTour||\n");
 					printf("----------------------------------------------------------------------------------------------------------\n");
 				}
 				afficheLigne(classement->tabClass[a], a);
 			}
 			printf("\n");
-			shmdt(classement);
+			//shmdt(classement);
 		}
 	}
+	}
+	shmdt(classement);
 	return 1;
 }
 
