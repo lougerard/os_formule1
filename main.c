@@ -25,6 +25,7 @@ double meilleurS1(struct Voiture voiture[20]);
 double meilleurS2(struct Voiture voiture[20]);
 double meilleurS3(struct Voiture voiture[20]);
 double meilleurTour(struct Voiture voiture[20]);
+void aband(struct Classement *class);
 
 int main (int argc, char* argv[]){
 
@@ -57,7 +58,7 @@ int main (int argc, char* argv[]){
 		for( i=0 ; i<21 ; i++ ){
 		
 		//srand(time(NULL)^getpid()<<20);
-		srand(time(NULL) - i*2);
+		srand(time(NULL) - i*20);
 		if (k != 0) {
 			usleep(100000);
 		}
@@ -76,9 +77,12 @@ int main (int argc, char* argv[]){
 			if (k == 1) {
 				voitureCourante.numVoiture = numeroVoitures[i];
 				voitureCourante.nbrPitstop = 0;
+				voitureCourante.abandon = 0;
 			}
-			voitureCourante.nbrTour = k - 1;
-			classement->tabClass[i] = voitRoule(voitureCourante, circuit);
+			if(voitureCourante.abandon == 0){
+				voitureCourante.nbrTour = k - 1;
+				classement->tabClass[i] = voitRoule(voitureCourante, circuit);
+			}
 			//printf("%f \n", classement->tabClass[i]);
 			//shmctl(shmid, IPC_SET, buf);
 			//shmdt(classement);
@@ -100,11 +104,12 @@ int main (int argc, char* argv[]){
 			for(a=0 ; a<20 ; a++){ 
 				//printf("voiture %d \n", classement->tabClass[a]->numVoiture);
 				if (a==0) {
-					printf("--------------------------------------------------------------------------------------------------------------------------\n");
-					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour||\n");
-					printf("--------------------------------------------------------------------------------------------------------------------------\n");
+					printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
+					printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 				}
-				trieTab(classement);					
+				trieTab(classement);
+				aband(classement);					
 				afficheLigne(classement->tabClass[a], a);
 			}
 			double meilleurSecteur1 = meilleurS1(classement->tabClass);
@@ -129,16 +134,16 @@ int main (int argc, char* argv[]){
         		int min = time->min;
         		int sec = time->tSec;
         		int milli = time->tMilliSec;
-			printf("--------------------------------------------------------------------------------------------------------------------------\n");
-			printf("||						MEILLEURS TEMPS TOUR							||\n");
-			printf("--------------------------------------------------------------------------------------------------------------------------");
-        		printf("\n||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i  	|%i		|%i	||\n", 0, 0, meilleurSecteur1, meilleurSecteur2, meilleurSecteur3, meilleurT, min, sec, milli, 0, 0);
-			printf("--------------------------------------------------------------------------------------------------------------------------\n");
-			printf("||						MEILLEURS TEMPS GENERAL							||\n");
-			printf("--------------------------------------------------------------------------------------------------------------------------\n");
+			printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			printf("||								MEILLEURS TEMPS TOUR								||\n");
+			printf("--------------------------------------------------------------------------------------------------------------------------------------------------");
+        		printf("\n|| /	| /	|%f	|%f	|%f	|%f	|%i:%i:%i  	| /		| /		| /		||\n", meilleurSecteur1, meilleurSecteur2, meilleurSecteur3, meilleurT, min, sec, milli);
+			printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			printf("||								MEILLEURS TEMPS GENERAL								||\n");
+			printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
-			printf("||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i	||\n", 0, 0, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG, min, sec, milli, 0, 0);
-			printf("--------------------------------------------------------------------------------------------------------------------------\n");
+			printf("|| /	| /	|%f	|%f	|%f	|%f	|%i:%i:%i	| /		| /		| /		||\n", meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG, min, sec, milli);
+			printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			printf("\n");
 			shmdt(classement);
 		}
@@ -163,7 +168,7 @@ void afficheLigne(struct Voiture voit, int a) {
 	int sec = time->tSec;
 	int milli = time->tMilliSec;
 	double tps = voit.tempsSecteur1 + voit.tempsSecteur2 + voit.tempsSecteur3;
-	printf("||%i     |%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i	||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, tps, min, sec, milli, voit.nbrPitstop, voit.nbrTour);
+	printf("||%i     |%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, tps, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
 	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
 }
        
@@ -171,20 +176,33 @@ void trieTab(struct Classement *class) {
 	struct Voiture v;
 	int m;
 	int k;
-	int count = 0;
+	int p;
 	for (m=0; m<20 ; m++) {
 		for (k=0 ; k<20; k++) {
-			if (k != m && (class->tabClass[m]).tempsActuel < (class->tabClass[k]).tempsActuel) {
+			if (k != m && (class->tabClass[m]).tempsActuel < (class->tabClass[k]).tempsActuel && (class->tabClass[m]).abandon==0) {
 				v = class->tabClass[m];
 				class->tabClass[m] = class->tabClass[k];
 				class->tabClass[k] = v;
-				count ++;
 			}
-		}	
+		}		
 	}
-	
-
 }
+
+void aband(struct Classement *class){
+	struct Voiture v;
+	int i;
+	int j;
+	for(i=0 ; i<20 ; i++){
+		for(j=i+1 ; j<20 ; j++){
+			if (i != j && (class->tabClass[i]).nbrTour < (class->tabClass[j]).nbrTour && (class->tabClass[i]).abandon == 1) {
+                                v = class->tabClass[i];
+                                class->tabClass[i] = class->tabClass[j];
+                                class->tabClass[j] = v;
+                        }
+		}
+	}
+}
+
 
 double meilleurS1(struct Voiture voiture[20]){
 	double meilleurTemps = 999;

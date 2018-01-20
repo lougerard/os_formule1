@@ -6,6 +6,7 @@
 #include "essai.c"
 
 int pitstop();
+int giveUp();
 
 struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 
@@ -45,6 +46,9 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
                         voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
                         voiture.pitstop = 1;
                 }
+		if(voiture.abandon == 0){	
+			voiture.abandon = giveUp();
+		}
 
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur3;
 		//if(circuit.meilleurSecteur3 > voiture.tempsSecteur3){
@@ -64,6 +68,14 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 int pitstop(){
 	double rand = ourRandom(14.0);
 	if(rand>=5.0 && rand<=5.5){
+		return 1;
+	}
+	return 0;
+}
+
+int giveUp(){
+	double rand = ourRandom(14.0);
+	if(rand>=5.0 && rand<=5.05){
 		return 1;
 	}
 	return 0;
