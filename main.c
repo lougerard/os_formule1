@@ -57,7 +57,7 @@ int main (int argc, char* argv[]){
 		for( i=0 ; i<21 ; i++ ){
 		
 		//srand(time(NULL)^getpid()<<20);
-		srand(time(NULL) - i*2);
+		srand(time(NULL) - i*20);
 		if (k != 0) {
 			usleep(100000);
 		}
@@ -153,6 +153,7 @@ int main (int argc, char* argv[]){
 	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i:%i:%i       |%i             |%i     ||\n", 0, 0, circuit->meilleurSecteur1, circuit->meilleurSecteur2, circuit->meilleurSecteur3, circuit->meilleurTour, min, sec, milli, 0, 0);
 	
 	shmdt(classement);
+	free(circuit);
 	return 1;
 }
 
