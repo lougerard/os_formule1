@@ -21,16 +21,16 @@
 
 void afficheLigne(struct Voiture voit, int a);
 void trieTab(struct Classement *classement);
-double meilleurS1(struct Voiture voiture[20]);
-double meilleurS2(struct Voiture voiture[20]);
-double meilleurS3(struct Voiture voiture[20]);
-double meilleurTour(struct Voiture voiture[20]);
+struct Voiture meilleurS1(struct Voiture voiture[20]);
+struct Voiture meilleurS2(struct Voiture voiture[20]);
+struct Voiture meilleurS3(struct Voiture voiture[20]);
+struct Voiture meilleurTour(struct Voiture voiture[20]);
 void aband(struct Classement *class);
 
 int main (int argc, char* argv[]){
 
-	//srand(time(NULL))^getpid() <<20;
-	int numeroVoitures[20] = {10,22,49,19,25,54,89,62,71,43,68,17,35,81,91,94,50,74,46,99};
+	int nbrTours = atoi(argv[1]);
+	int numeroVoitures[20] = {44,77,3,33,5,7,11,31,19,18,14,2,10,55,8,20,27,30,9,94};
 	struct Circuit *circuit = malloc(sizeof(struct Circuit));
 	struct Classement *classement = malloc(sizeof(struct Classement));
 	circuit->secteur1Min = 10.0;
@@ -40,9 +40,13 @@ int main (int argc, char* argv[]){
 	circuit->secteur3Min = 35.0;
 	circuit->secteur3Max = 40.0;
 	double meilleurS1G = 999;
+	int vS1G = 0;
 	double meilleurS2G = 999;
+	int vS2G = 0;
 	double meilleurS3G = 999;
+	int vS3G = 0;
 	double meilleurTG = 999;
+	int vTG = 0;
 	key_t key=9879;
 	int shmid, size;
 	struct shmid_ds *buf;
@@ -54,111 +58,91 @@ int main (int argc, char* argv[]){
 	int i;
 	int k;
 	struct Voiture voitureCourante;
-	for( k=1; k < 41 ; k++) {
+	for( k=1; k <= nbrTours ; k++) {
 		for( i=0 ; i<21 ; i++ ){
-		
-		//srand(time(NULL)^getpid()<<20);
-		srand(time(NULL) - i*20);
-		if (k != 0) {
-			usleep(100000);
-		}
-		if((pids[i]=fork())<0){
-			perror("fork");
-		}
-		else if(pids[i] == 0){
-		//printf("shmid fils %i \n", shmid);
-		//printf("shmat fils %i \n", shmat(shmid, 0, 0));
-		//printf("%p \n", classement);
-		classement = shmat(shmid, 0, 0);
-		//printf("voiture numéro %d \n", classement->tabClass[i]->numVoiture);
-			if (k > 1) {
-				voitureCourante = classement->tabClass[i];
+			srand(time(NULL) - i*20);
+			if (k != 0) {
+				usleep(100000);
 			}
-			if (k == 1) {
-				voitureCourante.numVoiture = numeroVoitures[i];
-				voitureCourante.nbrPitstop = 0;
-				voitureCourante.abandon = 0;
+			if((pids[i]=fork())<0){
+				perror("fork");
 			}
-			if(voitureCourante.abandon == 0){
-				voitureCourante.nbrTour = k - 1;
-				classement->tabClass[i] = voitRoule(voitureCourante, circuit);
-			}
-			//printf("%f \n", classement->tabClass[i]);
-			//shmctl(shmid, IPC_SET, buf);
-			//shmdt(classement);
-			//printf("%f", (classement->tabClass[i].tempsSecteur1));
-			//int a = 1; 
-                        //printf("voiture %d \n", classement->tabClass[a]->numVoiture);
-                        //afficheLigne(voitureCourante, i);
-                        //afficheLigne(classement->tabClass[i],i);
-                        exit(0);
-		}
-		//printf("%f \n", classement->tabClass[0]->tempsSecteur1);
-		else if(pids[i] > 0 && i == 20){
-			int shmidPere;
-			shmidPere = shmget(key, size, 0666);
-			//printf("shmid pere %i \n", shmidPere);
-			//printf("shmat pere %i \n", shmat(shmidPere, 0, 0));
-			classement = shmat(shmidPere, 0, 0);
-			int a = 1;
-			for(a=0 ; a<20 ; a++){ 
-				//printf("voiture %d \n", classement->tabClass[a]->numVoiture);
-				if (a==0) {
-					printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-					printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
-					printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			else if(pids[i] == 0){
+				classement = shmat(shmid, 0, 0);
+				if (k > 1) {
+					voitureCourante = classement->tabClass[i];
 				}
-				trieTab(classement);
-				aband(classement);					
-				afficheLigne(classement->tabClass[a], a);
+				if (k == 1) {
+					voitureCourante.numVoiture = numeroVoitures[i];
+					voitureCourante.nbrPitstop = 0;
+					voitureCourante.abandon = 0;
+				}	
+				if(voitureCourante.abandon == 0){
+					voitureCourante.nbrTour = k - 1;
+					classement->tabClass[i] = voitRoule(voitureCourante, circuit);
+				}
+                        	exit(0);
 			}
-			double meilleurSecteur1 = meilleurS1(classement->tabClass);
-			if(meilleurS1G > meilleurSecteur1){
-				meilleurS1G = meilleurSecteur1;
-			}
-			double meilleurSecteur2 = meilleurS2(classement->tabClass);
-			if(meilleurS2G > meilleurSecteur2){
-				meilleurS2G = meilleurSecteur2;
-			}
-			double meilleurSecteur3 = meilleurS3(classement->tabClass);
-			if(meilleurS3G > meilleurSecteur3){
-                                meilleurS3G = meilleurSecteur3;
-                        }
-			double meilleurT = meilleurTour(classement->tabClass);
-			if(meilleurTG > meilleurT){
-                                meilleurTG = meilleurT;
-                        }
-			//printf("%f \n", meilleurSecteur1);
-			struct timeConvert *time = malloc(sizeof(struct timeConvert));
-        		tConvert(time,(classement->tabClass[0]).tempsActuel);
-        		int min = time->min;
-        		int sec = time->tSec;
-        		int milli = time->tMilliSec;
-			printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			printf("||								MEILLEURS TEMPS TOUR								||\n");
-			printf("--------------------------------------------------------------------------------------------------------------------------------------------------");
-        		printf("\n|| /	| /	|%f	|%f	|%f	|%f	|%i:%i:%i  	| /		| /		| /		||\n", meilleurSecteur1, meilleurSecteur2, meilleurSecteur3, meilleurT, min, sec, milli);
-			printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			printf("||								MEILLEURS TEMPS GENERAL								||\n");
-			printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			else if(pids[i] > 0 && i == 20){
+				int shmidPere;
+				shmidPere = shmget(key, size, 0666);
+				classement = shmat(shmidPere, 0, 0);
+				int a = 1;
+				for(a=0 ; a<20 ; a++){ 
+					if (a==0) {
+						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+						printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
+						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+					}
+					trieTab(classement);
+					aband(classement);					
+					afficheLigne(classement->tabClass[a], a);
+				}
+				struct Voiture x1 = meilleurS1(classement->tabClass);	
+				double meilleurSecteur1 = x1.tempsSecteur1;
+				if(meilleurS1G > meilleurSecteur1){
+					meilleurS1G = meilleurSecteur1;
+					vS1G = x1.numVoiture;
+				}
+				struct Voiture x2 = meilleurS2(classement->tabClass);	
+				double meilleurSecteur2 = x2.tempsSecteur2;
+				if(meilleurS2G > meilleurSecteur2){
+					meilleurS2G = meilleurSecteur2;
+					vS2G = x2.numVoiture;
+				}	
+				struct Voiture x3 = meilleurS3(classement->tabClass);
+				double meilleurSecteur3 = x3.tempsSecteur3;
+				if(meilleurS3G > meilleurSecteur3){
+                                	meilleurS3G = meilleurSecteur3;
+					vS3G = x3.numVoiture;
+                        	}	
+				struct Voiture x4 = meilleurTour(classement->tabClass);
+				double meilleurT = x4.tempsSecteur1 + x4.tempsSecteur2 + x4.tempsSecteur3;
+				if(meilleurTG > meilleurT){
+                               		meilleurTG = meilleurT;
+					vTG = x4.numVoiture;
+                        	}
+				struct timeConvert *time = malloc(sizeof(struct timeConvert));
+        			tConvert(time,(classement->tabClass[0]).tempsActuel);
+        			int min = time->min;
+        			int sec = time->tSec;
+        			int milli = time->tMilliSec;
+				printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+				printf("||								MEILLEURS TEMPS TOUR								||\n");
+				printf("--------------------------------------------------------------------------------------------------------------------------------------------------");
+        			printf("\n|| /	| /	|%f %i	|%f %i	|%f %i	|%f %i	| /	  	| /		| /		| /		||\n",meilleurSecteur1, x1.numVoiture, meilleurSecteur2, x2.numVoiture, meilleurSecteur3, x3.numVoiture, meilleurT, x4.numVoiture);
+				printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+				printf("||								MEILLEURS TEMPS GENERAL								||\n");
+				printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
-			printf("|| /	| /	|%f	|%f	|%f	|%f	|%i:%i:%i	| /		| /		| /		||\n", meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG, min, sec, milli);
-			printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			printf("\n");
-			shmdt(classement);
+				printf("|| /	| /	|%f %i	|%f %i	|%f %i	|%f %i	|%i:%i:%i	| /		| /		| /		||\n", meilleurS1G, vS1G, meilleurS2G, vS2G, meilleurS3G, vS3G, meilleurTG, vTG, min, sec, milli);
+				printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+				printf("\n");
+				shmdt(classement);
+			}
 		}
 	}
-	}
-	//struct timeConvert *time = malloc(sizeof(struct timeConvert));
-        //tConvert(time,(classement->tabClass[0]).tempsActuel);
-        //int min = time->min;
-        //int sec = time->tSec;
-        //int milli = time->tMilliSec;
-
-	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i:%i:%i       |%i             |%i     ||\n", 0, 0, circuit->meilleurSecteur1, circuit->meilleurSecteur2, circuit->meilleurSecteur3, circuit->meilleurTour, min, sec, milli, 0, 0);
-	
 	shmdt(classement);
-	free(circuit);
 	return 1;
 }
 
@@ -169,7 +153,7 @@ void afficheLigne(struct Voiture voit, int a) {
 	int sec = time->tSec;
 	int milli = time->tMilliSec;
 	double tps = voit.tempsSecteur1 + voit.tempsSecteur2 + voit.tempsSecteur3;
-	printf("||%i     |%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, tps, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
+	printf("||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, tps, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
 	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
 }
        
@@ -205,46 +189,54 @@ void aband(struct Classement *class){
 }
 
 
-double meilleurS1(struct Voiture voiture[20]){
+struct Voiture meilleurS1(struct Voiture voiture[20]){
 	double meilleurTemps = 999;
+	struct Voiture v;
 	int i;
 	for(i=0 ; i<20 ; i++){
 		if(meilleurTemps > voiture[i].tempsSecteur1){
 			meilleurTemps = voiture[i].tempsSecteur1;
+			v = voiture[i];
 		}
 	}
-	return meilleurTemps;
+	return v;
 }
 
-double meilleurS2(struct Voiture voiture[20]){
+struct Voiture meilleurS2(struct Voiture voiture[20]){
         double meilleurTemps = 999;
+	struct Voiture v;
         int i;
         for(i=0 ; i<20 ; i++){
                 if(meilleurTemps > voiture[i].tempsSecteur2){
                         meilleurTemps = voiture[i].tempsSecteur2;
+			v = voiture[i];
                 }
         }
-        return meilleurTemps;
+        return v;
 }
 
-double meilleurS3(struct Voiture voiture[20]){
+struct Voiture meilleurS3(struct Voiture voiture[20]){
         double meilleurTemps = 999;
+	struct Voiture v;
         int i;
         for(i=0 ; i<20 ; i++){
                 if(meilleurTemps > voiture[i].tempsSecteur3){
                         meilleurTemps = voiture[i].tempsSecteur3;
+			v = voiture[i];
                 }
         }
-        return meilleurTemps;
+        return v;
 }
 
-double meilleurTour(struct Voiture voiture[20]){
+struct Voiture meilleurTour(struct Voiture voiture[20]){
         double meilleurTemps = 999;
+	struct Voiture v;
         int i;
         for(i=0 ; i<20 ; i++){
                 if(meilleurTemps > voiture[i].tempsSecteur1 + voiture[i].tempsSecteur2 + voiture[i].tempsSecteur3){
                         meilleurTemps = voiture[i].tempsSecteur1 + voiture[i].tempsSecteur2 + voiture[i].tempsSecteur3;
+			v = voiture[i];
                 }
         }
-        return meilleurTemps;
+        return v;
 }
