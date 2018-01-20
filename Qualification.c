@@ -138,6 +138,7 @@ int qualification(int nomb){
                 }
         }
         shmdt(classement);
+	free(circuit);
         return 1;
 }
 /*

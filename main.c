@@ -147,6 +147,7 @@ int main (int argc, char* argv[]){
 		}
 	}
 	shmdt(classement);
+	free(circuit);
 	return 1;
 }
 
