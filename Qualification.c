@@ -12,26 +12,25 @@
 
 #define NBVOITURE 20
 
-void afficheLigne(struct Voiture voit, int a);
-void trieTab(struct Classement *classement);
+void afficheLigneQ(struct Voiture voit, int a);
+void trieTabQ(struct Classement *classement);
 struct Voiture meilleurS1(struct Voiture voiture[20]);
 struct Voiture meilleurS2(struct Voiture voiture[20]);
 struct Voiture meilleurS3(struct Voiture voiture[20]);
 struct Voiture meilleurTour(struct Voiture voiture[20]);
 void aband(struct Classement *class);
 
-int qualification(int nomb){
-
-        int nbrTours = nomb;
+void qualification(struct Classement *classement, struct Circuit *circuit){
+	
         int numeroVoitures[20] = {44,77,3,33,5,7,11,31,19,18,14,2,10,55,8,20,27,30,9,94};
-        struct Circuit *circuit = malloc(sizeof(struct Circuit));
-        struct Classement *classement = malloc(sizeof(struct Classement));
-        circuit->secteur1Min = 10.0;
-        circuit->secteur1Max = 20.0;
-        circuit->secteur2Min = 25.0;
-        circuit->secteur2Max = 35.0;
-        circuit->secteur3Min = 35.0;
-        circuit->secteur3Max = 40.0;
+        //struct Circuit *circuit = malloc(sizeof(struct Circuit));
+        //struct Classement *classement = malloc(sizeof(struct Classement));
+        //circuit->secteur1Min = 10.0;
+        //circuit->secteur1Max = 20.0;
+        //circuit->secteur2Min = 25.0;
+        //circuit->secteur2Max = 35.0;
+        //circuit->secteur3Min = 35.0;
+        //circuit->secteur3Max = 40.0;
         double meilleurS1G = 999;
         int vS1G = 0;
         double meilleurS2G = 999;
@@ -42,17 +41,31 @@ int qualification(int nomb){
         int vTG = 0;
         key_t key=9879;
         int shmid, size;
-        struct shmid_ds *buf;
+        //struct shmid_ds *buf;
         size = sizeof(struct Voiture) * NBVOITURE;
         shmid = shmget(9879, size, IPC_CREAT | 0666);
-        shmctl(shmid, IPC_RMID, buf);
-        shmid = shmget(9879, size, IPC_CREAT | 0666);
+        //shmctl(shmid, IPC_RMID, buf);
+        //shmid = shmget(9879, size, IPC_CREAT | 0666);
         pid_t pids[20];
         int i;
         int k;
+	int nbrTours = 10;
+	int nombreVoiture=20;
         struct Voiture voitureCourante;
+	int r;
+	for(r = 0 ; r<3 ; r++){
+		if(r==0){
+			nbrTours = 14;
+			nombreVoiture=20;
+		}else if(r==1){
+			nbrTours = 12;
+			nombreVoiture=15;
+		}else if(r==2){
+			nbrTours = 10;
+			nombreVoiture=10;
+		}
         for( k=1; k <= nbrTours ; k++) {
-                for( i=0 ; i<21 ; i++ ){
+                for( i=0 ; i<=nombreVoiture ; i++ ){
                         srand(time(NULL) - i*20);
                         if (k != 0) {
                                 usleep(100000);
@@ -67,6 +80,7 @@ int qualification(int nomb){
                                 }
                                 if (k == 1) {
                                         voitureCourante.numVoiture = numeroVoitures[i];
+					voitureCourante.meilleurTour = 999;
                                         voitureCourante.nbrPitstop = 0;
                                         voitureCourante.abandon = 0;
                                 }
@@ -84,14 +98,14 @@ int qualification(int nomb){
                                 for(a=0 ; a<20 ; a++){
                                         if (a==0) {
                                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                                                printf("||                                                              QUALIFICATION FORMULE 1                                                         ||\n");
+                                                printf("||                                                              QUALIFICATION %i	                                                        ||\n", r+1);
 						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                                                 printf("||place |num    |T_s1           |T_s2           |T_s3           |T_tour         |T_actuel       |nbrPit         |nbrTour        |abandon        ||\n");
                                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                                         }
-                                        trieTab(classement);
-                                        aband(classement);                               
-                                        afficheLigne(classement->tabClass[a], a);
+                                        trieTabQ(classement);
+                                        //aband(classement);                               
+                                        afficheLigneQ(classement->tabClass[a], a);
                                 }
                                 struct Voiture x1 = meilleurS1(classement->tabClass);
                                 double meilleurSecteur1 = x1.tempsSecteur1;
@@ -125,31 +139,42 @@ int qualification(int nomb){
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                                 printf("||                                                              MEILLEURS TEMPS TOUR                                                            ||\n");
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------");
-                                printf("\n|| /  | /     |%f %i  |%f %i  |%f %i  |%f %i  | /             | /             | /             | /             ||\n",meilleurSecteur1, x1.numVoiture, meilleurSecteur2, x2.numVoiture, meilleurSecteur3, x3.numVoiture, meilleurT, x4.numVoiture);
+                                printf("\n|| /	| /	|%f %i	|%f %i	|%f %i	|%f %i	| /		| /		| /		| /		||\n",meilleurSecteur1, x1.numVoiture, meilleurSecteur2, x2.numVoiture, meilleurSecteur3, x3.numVoiture, meilleurT, x4.numVoiture);
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                                 printf("||                                                              MEILLEURS TEMPS GENERAL                                                         ||\n");
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-				printf("|| /    | /     |%f %i  |%f %i  |%f %i  |%f %i  |%i:%i:%i       | /             | /             | /             ||\n", meilleurS1G, vS1G, meilleurS2G, vS2G, meilleurS3G, vS3G, meilleurTG, vTG, min, sec, milli);
+				printf("|| /	| /	|%f %i	|%f %i	|%f %i	|%f %i	|%i:%i:%i	| /		| /		| /		||\n", meilleurS1G, vS1G, meilleurS2G, vS2G, meilleurS3G, vS3G, meilleurTG, vTG, min, sec, milli);
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
 				printf("\n");
-                                shmdt(classement);
+                                //shmdt(classement);
                         }
                 }
         }
-        shmdt(classement);
-	free(circuit);
-        return 1;
+	//shmdt(classement);
+	}
+        //shmdt(classement);
+	//free(circuit);
 }
-/*
-struct Classement trieTabl(struct Classement *class) {
+
+void afficheLigneQ(struct Voiture voit, int a) {
+        struct timeConvert *time = malloc(sizeof(struct timeConvert));
+        tConvert(time, voit.tempsActuel);
+        int min = time->min;
+        int sec = time->tSec;
+        int milli = time->tMilliSec;
+        printf("||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.meilleurTour, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
+        //printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
+}
+
+void trieTabQ(struct Classement *class) {
         struct Voiture v;
         int m;
         int k;
-        int p;
         for (m=0; m<20 ; m++) {
                 for (k=0 ; k<20; k++) {
-                        if (k != m && (class->tabClass[m]).tempsActuel < (class->tabClass[k]).tempsActuel && (class->tabClass[m]).abandon==0) {
+			
+                        if (k != m && (class->tabClass[m]).meilleurTour < (class->tabClass[k]).meilleurTour) {
                                 v = class->tabClass[m];
                                 class->tabClass[m] = class->tabClass[k];
                                 class->tabClass[k] = v;
@@ -157,7 +182,7 @@ struct Classement trieTabl(struct Classement *class) {
                 }
         }
 }
-
+/*
 void aband(struct Classement *class){
         struct Voiture v;
         int i;

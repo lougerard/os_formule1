@@ -51,13 +51,10 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
 		}
 
 		voiture.tempsActuel = voiture.tempsActuel + voiture.tempsSecteur3;
-		//if(circuit.meilleurSecteur3 > voiture.tempsSecteur3){
-		//	voiture.meilleurSecteur3 = voiture.tempsSecteur3;
-		//}
-		//double mTps = voiture.tempsSecteur1 + voiture.tempsSecteur2 + voiture.tempsSecteur3;
-		//if (mTps < voiture.meilleurTour) {
-		//	voiture.meilleurTour = mTps;
-		//}
+		double mTps = voiture.tempsSecteur1 + voiture.tempsSecteur2 + voiture.tempsSecteur3;
+		if (mTps < voiture.meilleurTour) {
+			voiture.meilleurTour = mTps;
+		}
 		//printf("sec3 %f\n", voiture->tempsSecteur3);
 		//usleep(300000);
 		voiture.nbrTour = voiture.nbrTour + 1;	

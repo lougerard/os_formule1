@@ -27,10 +27,10 @@ struct Voiture meilleurS2(struct Voiture voiture[20]);
 struct Voiture meilleurS3(struct Voiture voiture[20]);
 struct Voiture meilleurTour(struct Voiture voiture[20]);
 void aband(struct Classement *class);
+void depart(struct Classement *classement);
 
 int main (int argc, char* argv[]){
-	qualification(20);
-	usleep(10000000);
+	//qualification(20);
 	int nbrTours = atoi(argv[1]);
 	int numeroVoitures[20] = {44,77,3,33,5,7,11,31,19,18,14,2,10,55,8,20,27,30,9,94};
 	struct Circuit *circuit = malloc(sizeof(struct Circuit));
@@ -56,6 +56,17 @@ int main (int argc, char* argv[]){
 	shmid = shmget(9879, size, IPC_CREAT | 0666);
 	shmctl(shmid, IPC_RMID, buf);
 	shmid = shmget(9879, size, IPC_CREAT | 0666);
+	classement = shmat(shmid, 0, 0);
+	qualification(classement, circuit);
+	usleep(1000000);
+	depart(classement);
+	usleep(1000000);
+	//printf("avant");
+	//qualification(classement, 2, circuit);
+	//printf("après");
+	//usleep(1000000);
+	//qualification(classement, 3, circuit);
+	//usleep(1000000);
 	pid_t pids[20];
 	int i;
 	int k;
@@ -71,12 +82,10 @@ int main (int argc, char* argv[]){
 			}
 			else if(pids[i] == 0){
 				classement = shmat(shmid, 0, 0);
-				if (k > 1) {
-					voitureCourante = classement->tabClass[i];
-				}
+				voitureCourante = classement->tabClass[i];
 				if (k == 1) {
-					voitureCourante.numVoiture = numeroVoitures[i];
 					voitureCourante.nbrPitstop = 0;
+					voitureCourante.tempsActuel = 0;
 					voitureCourante.abandon = 0;
 				}	
 				if(voitureCourante.abandon == 0){
@@ -151,6 +160,28 @@ int main (int argc, char* argv[]){
 	return 1;
 }
 
+void depart(struct Classement *classement){
+	int y;
+	for(y=0 ; y<20 ; y++){
+		classement->tabClass[y].tempsSecteur1 = 0.000000;
+		classement->tabClass[y].tempsSecteur2 = 0.000000;
+		classement->tabClass[y].tempsSecteur3 = 0.000000;
+		classement->tabClass[y].tempsActuel = 0.000000;
+		classement->tabClass[y].pitstop = 0;
+		classement->tabClass[y].nbrPitstop = 0;
+		classement->tabClass[y].nbrTour = 0;
+		classement->tabClass[y].abandon = 0;
+                if (y==0) {
+        	        printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                        printf("||                                                       DEPART GRAND PRIX DE FORMULE 1                                                         ||\n");
+                        printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                        printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
+                        printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                 }
+		 afficheLigneQ(classement->tabClass[y], y);
+         }
+}        
+
 void afficheLigne(struct Voiture voit, int a) {
 	struct timeConvert *time = malloc(sizeof(struct timeConvert));
 	tConvert(time, voit.tempsActuel);
@@ -166,7 +197,6 @@ void trieTab(struct Classement *class) {
 	struct Voiture v;
 	int m;
 	int k;
-	int p;
 	for (m=0; m<20 ; m++) {
 		for (k=0 ; k<20; k++) {
 			if (k != m && (class->tabClass[m]).tempsActuel < (class->tabClass[k]).tempsActuel && (class->tabClass[m]).abandon==0) {
