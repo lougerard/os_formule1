@@ -1,4 +1,4 @@
-#iinclude <sys/wait.h>
+#include <sys/wait.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <assert.h>
@@ -56,16 +56,16 @@ void qualification2(struct Classement *classement, struct Circuit *circuit){
                         }
                         else if(pids[i] == 0){
                                 //classement = shmat(shmid, 0, 0);
-                                if (k > 1) {
+                                //if (k > 1) {
                                         voitureCourante = classement->tabClass[i];
-                                }
+                                //}
                                 if (k == 1) {
-                                        voitureCourante.numVoiture = numeroVoitures[i];
+                                        //voitureCourante.numVoiture = numeroVoitures[i];
 					voitureCourante.meilleurTour = 999;
                                         voitureCourante.nbrPitstop = 0;
                                         voitureCourante.abandon = 0;
                                 }
-                                if(voitureCourante.abandon == 0){
+                                if(voitureCourante.abandon == 0 && i<15){
 					voitureCourante.nbrTour = k - 1;
                                         classement->tabClass[i] = voitRoule(voitureCourante, circuit);
                                 }

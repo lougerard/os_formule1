@@ -49,7 +49,7 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
         pid_t pids[20];
         int i;
         int k;
-	int nbrTours = 12;
+	int nbrTours = 10;
 	int nombreVoiture=20;
         struct Voiture voitureCourante;
         for( k=1; k <= nbrTours ; k++) {
@@ -63,16 +63,16 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
                         }
                         else if(pids[i] == 0){
                                 //classement = shmat(shmid, 0, 0);
-                                if (k > 1) {
+                                //if (k > 1) {
                                         voitureCourante = classement->tabClass[i];
-                                }
+                                //}
                                 if (k == 1) {
-                                        voitureCourante.numVoiture = numeroVoitures[i];
+                                        //voitureCourante.numVoiture = numeroVoitures[i];
 					voitureCourante.meilleurTour = 999;
                                         voitureCourante.nbrPitstop = 0;
                                         voitureCourante.abandon = 0;
                                 }
-                                if(voitureCourante.abandon == 0){
+                                if(voitureCourante.abandon == 0 && i<10){
 					voitureCourante.nbrTour = k - 1;
                                         classement->tabClass[i] = voitRoule(voitureCourante, circuit);
                                 }
@@ -87,7 +87,7 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
                                 for(a=0 ; a<20 ; a++){
                                         if (a==0) {
                                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                                                printf("||                                                              QUALIFICATION 3 2		                                                        ||\n");
+                                                printf("||                                                              QUALIFICATION 3		                                                        ||\n");
 						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                                                 printf("||place |num    |T_s1           |T_s2           |T_s3           |T_tour         |T_actuel       |nbrPit         |nbrTour        |abandon        ||\n");
                                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
