@@ -16,7 +16,9 @@
 #include "rand.h"
 #include "essai.h"
 #include "circuit.c"
-#include "Qualification.c"
+#include "Qualification1.c"
+//#include "Qualification2.c"
+//#include "Qualification3.c"
 
 #define NBVOITURE 20
 
@@ -57,7 +59,11 @@ int main (int argc, char* argv[]){
 	shmctl(shmid, IPC_RMID, buf);
 	shmid = shmget(9879, size, IPC_CREAT | 0666);
 	classement = shmat(shmid, 0, 0);
-	qualification(classement, circuit);
+	qualification1(classement, circuit);
+	usleep(1000000);
+	qualification2(classement, circuit);
+	usleep(1000000);
+	qualification3(classement, circuit);
 	usleep(1000000);
 	depart(classement);
 	usleep(1000000);
