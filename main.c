@@ -16,6 +16,7 @@
 #include "rand.h"
 #include "essai.h"
 #include "circuit.c"
+#include "Qualification.c"
 
 #define NBVOITURE 20
 
@@ -28,7 +29,8 @@ struct Voiture meilleurTour(struct Voiture voiture[20]);
 void aband(struct Classement *class);
 
 int main (int argc, char* argv[]){
-
+	qualification(20);
+	usleep(10000000);
 	int nbrTours = atoi(argv[1]);
 	int numeroVoitures[20] = {44,77,3,33,5,7,11,31,19,18,14,2,10,55,8,20,27,30,9,94};
 	struct Circuit *circuit = malloc(sizeof(struct Circuit));
@@ -90,6 +92,8 @@ int main (int argc, char* argv[]){
 				int a = 1;
 				for(a=0 ; a<20 ; a++){ 
 					if (a==0) {
+						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                                		printf("||                                                              GRAND PRIX DE FORMULE 1                                                         ||\n");
 						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 						printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
 						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
