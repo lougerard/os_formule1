@@ -158,6 +158,7 @@ int main (int argc, char* argv[]){
 	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i:%i:%i       |%i             |%i     ||\n", 0, 0, circuit->meilleurSecteur1, circuit->meilleurSecteur2, circuit->meilleurSecteur3, circuit->meilleurTour, min, sec, milli, 0, 0);
 	
 	shmdt(classement);
+	free(circuit);
 	return 1;
 }
 
