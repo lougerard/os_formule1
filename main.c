@@ -83,7 +83,9 @@ int main (int argc, char* argv[]){
 	pid_t pids[20];
 	int i;
 	int k;
+	sem_t *sem;
 	struct Voiture voitureCourante;
+	sem = sem_open("semP", O_CREAT | O_EXCL, 0644, 1);
 	for( k=1; k <= nbrTours ; k++) {
 		for( i=0 ; i<21 ; i++ ){
 			srand(time(NULL) - i*20);
@@ -95,6 +97,7 @@ int main (int argc, char* argv[]){
 			}
 			else if(pids[i] == 0){
 				classement = shmat(shmid, 0, 0);
+				sem_wait(sem);
 				voitureCourante = classement->tabClass[i];
 				if (k == 1) {
 					voitureCourante.nbrPitstop = 0;
@@ -105,6 +108,7 @@ int main (int argc, char* argv[]){
 					voitureCourante.nbrTour = k - 1;
 					classement->tabClass[i] = voitRoule(voitureCourante, circuit);
 				}
+				sem_post(sem);
                         	exit(0);
 			}
 			else if(pids[i] > 0 && i == 20){
@@ -112,6 +116,7 @@ int main (int argc, char* argv[]){
 				shmidPere = shmget(key, size, 0666);
 				classement = shmat(shmidPere, 0, 0);
 				int a = 1;
+				sem_wait(sem);
 				for(a=0 ; a<20 ; a++){ 
 					if (a==0) {
 						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
@@ -164,10 +169,13 @@ int main (int argc, char* argv[]){
 				printf("|| /	| /	|%f %i	|%f %i	|%f %i	|%f %i	|%i:%i:%i	| /		| /		| /		||\n", meilleurS1G, vS1G, meilleurS2G, vS2G, meilleurS3G, vS3G, meilleurTG, vTG, min, sec, milli);
 				printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 				printf("\n");
+				sem_post(sem);
 				shmdt(classement);
 			}
 		}
 	}
+	sem_unlink("semP");
+	sem_close(sem);
 	shmdt(classement);
 	free(circuit);
 	return 1;

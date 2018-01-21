@@ -22,7 +22,7 @@ void aband(struct Classement *class);
 
 void qualification3(struct Classement *classement, struct Circuit *circuit){
 	
-        int numeroVoitures[20] = {44,77,3,33,5,7,11,31,19,18,14,2,10,55,8,20,27,30,9,94};
+        //int numeroVoitures[20] = {44,77,3,33,5,7,11,31,19,18,14,2,10,55,8,20,27,30,9,94};
         //struct Circuit *circuit = malloc(sizeof(struct Circuit));
         //struct Classement *classement = malloc(sizeof(struct Classement));
         //circuit->secteur1Min = 10.0;
@@ -49,11 +49,13 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
         pid_t pids[20];
         int i;
         int k;
-	sem_t mutex;
+	//sem_t mutex;
+	sem_t *sem;
 	int nbrTours = 10;
 	int nombreVoiture=20;
         struct Voiture voitureCourante;
-	sem_init(&mutex,1,1);
+	//sem_init(&mutex,1,1);
+	sem = sem_open("semP", O_CREAT | O_EXCL, 0644, 1);
         for( k=1; k <= nbrTours ; k++) {
                 for( i=0 ; i<=nombreVoiture ; i++ ){
                         srand(time(NULL) - i*20);
@@ -65,7 +67,8 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
                         }
                         else if(pids[i] == 0){
                                 classement = shmat(shmid, 0, 0);
-				sem_wait(&mutex);
+				//sem_wait(&mutex);
+				sem_wait(sem);
                                 //if (k > 1) {
                                         voitureCourante = classement->tabClass[i];
                                 //}
@@ -80,7 +83,8 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
 					voitureCourante.nbrTour = k - 1;
                                         classement->tabClass[i] = voitRoule(voitureCourante, circuit);
                                 }
-				sem_post(&mutex);
+				//sem_post(&mutex);
+				sem_post(sem);
 				shmdt(classement);
                                 exit(0);
                         }
@@ -88,7 +92,8 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
                                 //int shmidPere;
                                 //shmidPere = shmget(key, size, 0666);
                                 //classement = shmat(shmidPere, 0, 0);
-                                sem_wait(&mutex);
+                                //sem_wait(&mutex);
+                                sem_wait(sem);
                                 int a = 1;
                                 for(a=0 ; a<20 ; a++){
                                         if (a==0) {
@@ -142,14 +147,17 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
 				printf("\n");
-				sem_post(&mutex);
+				//sem_post(&mutex);
+				sem_post(sem);
                                 //shmdt(classement);
                         }
                 }
         }
 	//shmdt(classement);
 	//free(circuit);
-	sem_destroy(&mutex);
+	//sem_destroy(&mutex);
+	sem_unlink("semP");
+	sem_close(sem);
 }
 
 void afficheLigneQ(struct Voiture voit, int a) {
