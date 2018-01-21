@@ -228,21 +228,6 @@ void afficheLigneQ(struct Voiture voit, int a) {
         int sec = time->tSec;
         int milli = time->tMilliSec;
         printf( "||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.meilleurTour, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
- }
-
-void aband(struct Classement *class){
-        struct Voiture v;
-        int i;
-        int j;
-        for(i=0 ; i<20 ; i++){
-                for(j=i+1 ; j<20 ; j++){
-                        if (i != j && (class->tabClass[i]).nbrTour < (class->tabClass[j]).nbrTour && (class->tabClass[i]).abandon == 1) {
-                                v = class->tabClass[i];
-                                class->tabClass[i] = class->tabClass[j];
-                                class->tabClass[j] = v;
-                        }
-                }
-        }
 }
 
 struct Voiture meilleurS1(struct Voiture voiture[20]){

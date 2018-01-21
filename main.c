@@ -24,6 +24,8 @@
 
 void afficheLigne(struct Voiture voit, int a);
 void trieTab(struct Classement *classement);
+void printFichier(int num, struct Classement *class, int vS1G, int vS2G, int vS3G, int vTG, double meilleurS1G, double meilleurS2G, double meilleurS3G, double meilleurTG);
+void afficheLigneE(struct Voiture voit, int a, FILE* fichier);
 struct Voiture meilleurS1(struct Voiture voiture[20]);
 struct Voiture meilleurS2(struct Voiture voiture[20]);
 struct Voiture meilleurS3(struct Voiture voiture[20]);
@@ -170,8 +172,13 @@ int main (int argc, char* argv[]){
 				printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 				printf("\n");
 				sem_post(sem);
-				shmdt(classement);
+				//shmdt(classement);
 			}
+		}
+		if (k == nbrTours) {
+			sem_wait(sem);
+			printFichier(2, classement, vS1G, vS2G, vS3G, vTG, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG);
+			sem_post(sem);
 		}
 	}
 	sem_unlink("semP");
@@ -213,6 +220,36 @@ void depart(struct Classement *classement, char text[]){
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 }        
 
+
+void printFichier(int num, struct Classement *class, int vS1G, int vS2G, int vS3G, int vTG, double meilleurS1G, double meilleurS2G, double meilleurS3G, double meilleurTG) {
+	FILE* fichier = NULL;
+    	int k = num;
+	char texte[] = "CLASSEMENT FINAL";
+    	if (k == 1) {
+    		fichier = fopen("Qualif3.txt", "w");
+    	}
+    	else if (k == 2) {
+    		fichier = fopen("GP.txt", "w");
+    	}
+    	if (fichier != NULL)
+    	{	
+		fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                                                fprintf(fichier, "||								%s								||\n",texte);
+						fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                                                fprintf(fichier, "||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
+                                                fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");		
+		int lo;
+		for (lo = 0; lo < 20; lo++ ) {
+			afficheLigneE(class->tabClass[lo],lo, fichier);
+		}
+		fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                                fprintf(fichier, "||								MEILLEURS TEMPS	GENERAL								||\n");
+                                fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+				fprintf(fichier, "|| /	| /	|%f %i	|%f %i	|%f %i	|%f %i	|%i:%i:%i	| /		| /		| /		||\n", meilleurS1G, vS1G, meilleurS2G, vS2G, meilleurS3G, vS3G, meilleurTG, vTG, 0, 0, 0);
+                                fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        	fclose(fichier);
+    	}
+}
 void afficheLigne(struct Voiture voit, int a) {
 	struct timeConvert *time = malloc(sizeof(struct timeConvert));
 	tConvert(time, voit.tempsActuel);
@@ -221,7 +258,14 @@ void afficheLigne(struct Voiture voit, int a) {
 	int milli = time->tMilliSec;
 	double tps = voit.tempsSecteur1 + voit.tempsSecteur2 + voit.tempsSecteur3;
 	printf("||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, tps, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
-	//printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
+}
+void afficheLigneE(struct Voiture voit, int a, FILE* fichier) {
+        struct timeConvert *time = malloc(sizeof(struct timeConvert));
+        tConvert(time, voit.tempsActuel);
+        int min = time->min;
+        int sec = time->tSec;
+        int milli = time->tMilliSec;
+        fprintf(fichier, "||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.meilleurTour, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
 }
        
 void trieTab(struct Classement *class) {

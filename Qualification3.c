@@ -13,7 +13,9 @@
 #define NBVOITURE 20
 
 void afficheLigneQ(struct Voiture voit, int a);
+void printFichier(int num, struct Classement *class, int vS1G, int vS2G, int vS3G, int vTG, double meilleurS1G, double meilleurS2G, double meilleurS3G, double meilleurTG);
 void trieTabQ3(struct Classement *classement);
+void afficheLigneE(struct Voiture voit, int a, FILE* fichier);
 struct Voiture meilleurS1Q3(struct Voiture voiture[20]);
 struct Voiture meilleurS2Q3(struct Voiture voiture[20]);
 struct Voiture meilleurS3Q3(struct Voiture voiture[20]);
@@ -143,6 +145,11 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
                                 //shmdt(classement);
                         }
                 }
+		if (k == nbrTours) {
+			sem_wait(sem);
+			printFichier(1, classement, vS1G, vS2G, vS3G, vTG, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG);
+			sem_post(sem);
+		}
         }
 	//shmdt(classement);
 	//free(circuit);
