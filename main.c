@@ -17,8 +17,6 @@
 #include "essai.h"
 #include "circuit.c"
 #include "Qualification1.c"
-//#include "Qualification2.c"
-//#include "Qualification3.c"
 
 #define NBVOITURE 20
 
@@ -76,12 +74,6 @@ int main (int argc, char* argv[]){
 	char text3[] = "Depart du Grand Prix de F1";
 	depart(classement, text3);
 	usleep(1000000);
-	//printf("avant");
-	//qualification(classement, 2, circuit);
-	//printf("après");
-	//usleep(1000000);
-	//qualification(classement, 3, circuit);
-	//usleep(1000000);
 	pid_t pids[20];
 	int i;
 	int k;
@@ -172,7 +164,6 @@ int main (int argc, char* argv[]){
 				printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 				printf("\n");
 				sem_post(sem);
-				//shmdt(classement);
 			}
 		}
 		if (k == nbrTours) {
@@ -220,7 +211,6 @@ void depart(struct Classement *classement, char text[]){
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 }        
 
-
 void printFichier(int num, struct Classement *class, int vS1G, int vS2G, int vS3G, int vTG, double meilleurS1G, double meilleurS2G, double meilleurS3G, double meilleurTG) {
 	FILE* fichier = NULL;
     	int k = num;
@@ -250,6 +240,7 @@ void printFichier(int num, struct Classement *class, int vS1G, int vS2G, int vS3
         	fclose(fichier);
     	}
 }
+
 void afficheLigne(struct Voiture voit, int a) {
 	struct timeConvert *time = malloc(sizeof(struct timeConvert));
 	tConvert(time, voit.tempsActuel);
@@ -259,6 +250,7 @@ void afficheLigne(struct Voiture voit, int a) {
 	double tps = voit.tempsSecteur1 + voit.tempsSecteur2 + voit.tempsSecteur3;
 	printf("||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, tps, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
 }
+
 void afficheLigneE(struct Voiture voit, int a, FILE* fichier) {
         struct timeConvert *time = malloc(sizeof(struct timeConvert));
         tConvert(time, voit.tempsActuel);

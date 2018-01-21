@@ -85,7 +85,6 @@ for (loop = 1; loop <= 3 ; loop++) {
                                         classement->tabClass[i] = voitRoule(voitureCourante, circuit, 40);
                                 }
 				sem_post(sem);
-				//shmdt(classement);
                                 exit(0);
                         }
                         else if(pids[i] > 0 && i == 20){
@@ -148,7 +147,6 @@ for (loop = 1; loop <= 3 ; loop++) {
                                 sem_post(sem);
                         }
                 }
-		printf("%i %i %i %i %f %f %f %f", vS1G, vS2G, vS3G, vTG, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG);
 		if (k == nbrTours) {
 			sem_wait(sem);
 			printFichier(loop, classement, vS1G, vS2G, vS3G, vTG, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG);
@@ -282,11 +280,6 @@ struct Voiture meilleurTour(struct Voiture voiture[20]){
         return v;
 }
 
-
-
-
-
-
 int main(int argc, char* argv[]) {
 	struct Circuit *circuit = malloc(sizeof(struct Circuit));
 	circuit->secteur1Min = 10.0;
@@ -297,6 +290,3 @@ int main(int argc, char* argv[]) {
         circuit->secteur3Max = 40.0;
 	essai1(circuit);
 }
-
-
-

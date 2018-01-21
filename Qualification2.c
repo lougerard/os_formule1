@@ -23,7 +23,6 @@ void aband(struct Classement *class);
 
 void qualification2(struct Classement *classement, struct Circuit *circuit){
 	
-        //int numeroVoitures[20] = {44,77,3,33,5,7,11,31,19,18,14,2,10,55,8,20,27,30,9,94};
         double meilleurS1G = 999;
         int vS1G = 0;
         double meilleurS2G = 999;
@@ -34,20 +33,15 @@ void qualification2(struct Classement *classement, struct Circuit *circuit){
         int vTG = 0;
         key_t key=9879;
         int shmid, size;
-        //struct shmid_ds *buf;
         size = sizeof(struct Voiture) * NBVOITURE;
         shmid = shmget(9879, size, IPC_CREAT | 0666);
-        //shmctl(shmid, IPC_RMID, buf);
-        //shmid = shmget(9879, size, IPC_CREAT | 0666);
         pid_t pids[20];
-	//sem_t mutex;
 	sem_t *sem;
         int i;
         int k;
 	int nbrTours = 12;
 	int nombreVoiture=20;
         struct Voiture voitureCourante;
-	//sem_init(&mutex, 1,1);
 	sem = sem_open("semP", O_CREAT | O_EXCL, 0644, 1);
         for( k=1; k <= nbrTours ; k++) {
                 for( i=0 ; i<=nombreVoiture ; i++ ){
@@ -60,13 +54,9 @@ void qualification2(struct Classement *classement, struct Circuit *circuit){
                         }
                         else if(pids[i] == 0){
                                 classement = shmat(shmid, 0, 0);
-				//sem_wait(&mutex);
 				sem_wait(sem);
-                                //if (k > 1) {
-                                        voitureCourante = classement->tabClass[i];
-                                //}
+                                voitureCourante = classement->tabClass[i];
                                 if (k == 1) {
-                                        //voitureCourante.numVoiture = numeroVoitures[i];
 					voitureCourante.meilleurTour = 999;
                                         voitureCourante.nbrPitstop = 0;
                                         voitureCourante.abandon = 0;
@@ -76,16 +66,11 @@ void qualification2(struct Classement *classement, struct Circuit *circuit){
 					voitureCourante.nbrTour = k - 1;
                                         classement->tabClass[i] = voitRoule(voitureCourante, circuit, 40);
                                 }
-				//sem_post(&mutex);
 				sem_post(sem);
 				shmdt(classement);
                                 exit(0);
                         }
                         else if(pids[i] > 0 && i == 20){
-                                //int shmidPere;
-                                //shmidPere = shmget(key, size, 0666);
-                                //classement = shmat(shmidPere, 0, 0);
-                                //sem_wait(&mutex);
                                 sem_wait(sem);
                                 int a = 1;
                                 for(a=0 ; a<20 ; a++){
@@ -97,7 +82,6 @@ void qualification2(struct Classement *classement, struct Circuit *circuit){
                                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                                         }
                                         trieTabQ2(classement);
-                                        //aband(classement);                               
                                         afficheLigneQ(classement->tabClass[a], a);
                                 }
                                 struct Voiture x1 = meilleurS1Q2(classement->tabClass);
@@ -140,15 +124,10 @@ void qualification2(struct Classement *classement, struct Circuit *circuit){
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
 				printf("\n");
-                                //shmdt(classement);
-                                //sem_post(&mutex);
                                 sem_post(sem);
                         }
                 }
         }
-	//shmdt(classement);
-	//free(circuit);
-	//sem_destroy(&mutex);
 	sem_unlink("semP");
 	sem_close(sem);
 }
@@ -169,48 +148,7 @@ void trieTabQ2(struct Classement *class) {
         }
 }
 
-/*
-void afficheLigneQ(struct Voiture voit, int a) {
-        struct timeConvert *time = malloc(sizeof(struct timeConvert));
-        tConvert(time, voit.tempsActuel);
-        int min = time->min;
-        int sec = time->tSec;
-        int milli = time->tMilliSec;
-        printf("||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.meilleurTour, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
-        //printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
-}
 
-void trieTabQ(struct Classement *class) {
-        struct Voiture v;
-        int m;
-        int k;
-        for (m=0; m<20 ; m++) {
-                for (k=0 ; k<20; k++) {
-			
-                        if (k != m && (class->tabClass[m]).meilleurTour < (class->tabClass[k]).meilleurTour) {
-                                v = class->tabClass[m];
-                                class->tabClass[m] = class->tabClass[k];
-                                class->tabClass[k] = v;
-                        }
-                }
-        }
-}
-
-void aband(struct Classement *class){
-        struct Voiture v;
-        int i;
-        int j;
-        for(i=0 ; i<20 ; i++){
-                for(j=i+1 ; j<20 ; j++){
-                        if (i != j && (class->tabClass[i]).nbrTour < (class->tabClass[j]).nbrTour && (class->tabClass[i]).abandon == 1) {
-                                v = class->tabClass[i];
-                                class->tabClass[i] = class->tabClass[j];
-                                class->tabClass[j] = v;
-                        }
-                }
-        }
-}
-*/
 struct Voiture meilleurS1Q2(struct Voiture voiture[20]){
         double meilleurTemps = 999;
         struct Voiture v;
