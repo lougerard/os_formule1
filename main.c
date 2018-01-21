@@ -106,7 +106,7 @@ int main (int argc, char* argv[]){
 				}	
 				if(voitureCourante.abandon == 0){
 					voitureCourante.nbrTour = k - 1;
-					classement->tabClass[i] = voitRoule(voitureCourante, circuit);
+					classement->tabClass[i] = voitRoule(voitureCourante, circuit, nbrTours);
 				}
 				sem_post(sem);
                         	exit(0);

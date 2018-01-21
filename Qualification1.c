@@ -89,7 +89,7 @@ void qualification1(struct Classement *classement, struct Circuit *circuit){
                                 if(voitureCourante.abandon == 0){
 					//down(mutex);
 					voitureCourante.nbrTour = k - 1;
-                                        classement->tabClass[i] = voitRoule(voitureCourante, circuit);
+                                        classement->tabClass[i] = voitRoule(voitureCourante, circuit, 40);
 					//up(mutex);
                                 }
 				sem_post(sem);

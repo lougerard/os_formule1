@@ -14,23 +14,14 @@
 
 void afficheLigneQ(struct Voiture voit, int a);
 void trieTabQ3(struct Classement *classement);
-struct Voiture meilleurS1(struct Voiture voiture[20]);
-struct Voiture meilleurS2(struct Voiture voiture[20]);
-struct Voiture meilleurS3(struct Voiture voiture[20]);
-struct Voiture meilleurTour(struct Voiture voiture[20]);
+struct Voiture meilleurS1Q3(struct Voiture voiture[20]);
+struct Voiture meilleurS2Q3(struct Voiture voiture[20]);
+struct Voiture meilleurS3Q3(struct Voiture voiture[20]);
+struct Voiture meilleurTourQ3(struct Voiture voiture[20]);
 void aband(struct Classement *class);
 
 void qualification3(struct Classement *classement, struct Circuit *circuit){
 	
-        //int numeroVoitures[20] = {44,77,3,33,5,7,11,31,19,18,14,2,10,55,8,20,27,30,9,94};
-        //struct Circuit *circuit = malloc(sizeof(struct Circuit));
-        //struct Classement *classement = malloc(sizeof(struct Classement));
-        //circuit->secteur1Min = 10.0;
-        //circuit->secteur1Max = 20.0;
-        //circuit->secteur2Min = 25.0;
-        //circuit->secteur2Max = 35.0;
-        //circuit->secteur3Min = 35.0;
-        //circuit->secteur3Max = 40.0;
         double meilleurS1G = 999;
         int vS1G = 0;
         double meilleurS2G = 999;
@@ -81,7 +72,7 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
                                 }
                                 if(voitureCourante.abandon == 0 && i<10){
 					voitureCourante.nbrTour = k - 1;
-                                        classement->tabClass[i] = voitRoule(voitureCourante, circuit);
+                                        classement->tabClass[i] = voitRoule(voitureCourante, circuit, 40);
                                 }
 				//sem_post(&mutex);
 				sem_post(sem);
@@ -107,27 +98,27 @@ void qualification3(struct Classement *classement, struct Circuit *circuit){
                                         //aband(classement);                               
                                         afficheLigneQ(classement->tabClass[a], a);
                                 }
-                                struct Voiture x1 = meilleurS1(classement->tabClass);
+                                struct Voiture x1 = meilleurS1Q3(classement->tabClass);
                                 double meilleurSecteur1 = x1.tempsSecteur1;
-                                if(meilleurS1G > meilleurSecteur1 && meilleurSecteur1 != 0){
+                                if(meilleurS1G > meilleurSecteur1){
                                         meilleurS1G = meilleurSecteur1;
                                         vS1G = x1.numVoiture;
                                 }
-                                struct Voiture x2 = meilleurS2(classement->tabClass);
+                                struct Voiture x2 = meilleurS2Q3(classement->tabClass);
                                 double meilleurSecteur2 = x2.tempsSecteur2;
-                                if(meilleurS2G > meilleurSecteur2 && meilleurSecteur2 != 0){
+                                if(meilleurS2G > meilleurSecteur2){
                                         meilleurS2G = meilleurSecteur2;
                                         vS2G = x2.numVoiture;
                                 }
-				struct Voiture x3 = meilleurS3(classement->tabClass);
+				struct Voiture x3 = meilleurS3Q3(classement->tabClass);
                                 double meilleurSecteur3 = x3.tempsSecteur3;
-                                if(meilleurS3G > meilleurSecteur3 && meilleurSecteur3 != 0){
+                                if(meilleurS3G > meilleurSecteur3){
                                         meilleurS3G = meilleurSecteur3;
                                         vS3G = x3.numVoiture;
                                 }
-                                struct Voiture x4 = meilleurTour(classement->tabClass);
+                                struct Voiture x4 = meilleurTourQ3(classement->tabClass);
                                 double meilleurT = x4.tempsSecteur1 + x4.tempsSecteur2 + x4.tempsSecteur3;
-                                if(meilleurTG > meilleurT && meilleurTour != 0){
+                                if(meilleurTG > meilleurT){
                                         meilleurTG = meilleurT;
                                         vTG = x4.numVoiture;
                                 }
@@ -167,7 +158,6 @@ void afficheLigneQ(struct Voiture voit, int a) {
         int sec = time->tSec;
         int milli = time->tMilliSec;
         printf("||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.meilleurTour, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
-        //printf("||%i     |%i    |%f     |%f     |%f     |%f     |%i     |%i     ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.tempsActuel, voit.nbrPitstop, voit.nbrTour);
 }
 
 void trieTabQ3(struct Classement *class) {
@@ -200,12 +190,12 @@ void aband(struct Classement *class){
                 }
         }
 }
-
-struct Voiture meilleurS1(struct Voiture voiture[20]){
+*/
+struct Voiture meilleurS1Q3(struct Voiture voiture[20]){
         double meilleurTemps = 999;
         struct Voiture v;
         int i;
-        for(i=0 ; i<20 ; i++){
+        for(i=0 ; i<10 ; i++){
                 if(meilleurTemps > voiture[i].tempsSecteur1){
                         meilleurTemps = voiture[i].tempsSecteur1;
                         v = voiture[i];
@@ -214,11 +204,11 @@ struct Voiture meilleurS1(struct Voiture voiture[20]){
         return v;
 }
 
-struct Voiture meilleurS2(struct Voiture voiture[20]){
+struct Voiture meilleurS2Q3(struct Voiture voiture[20]){
         double meilleurTemps = 999;
         struct Voiture v;
         int i;
-        for(i=0 ; i<20 ; i++){
+        for(i=0 ; i<10 ; i++){
                 if(meilleurTemps > voiture[i].tempsSecteur2){
                         meilleurTemps = voiture[i].tempsSecteur2;
                         v = voiture[i];
@@ -227,11 +217,11 @@ struct Voiture meilleurS2(struct Voiture voiture[20]){
         return v;
 }
 
-struct Voiture meilleurS3(struct Voiture voiture[20]){
+struct Voiture meilleurS3Q3(struct Voiture voiture[20]){
         double meilleurTemps = 999;
         struct Voiture v;
         int i;
-        for(i=0 ; i<20 ; i++){
+        for(i=0 ; i<10 ; i++){
                 if(meilleurTemps > voiture[i].tempsSecteur3){
                         meilleurTemps = voiture[i].tempsSecteur3;
                         v = voiture[i];
@@ -240,11 +230,11 @@ struct Voiture meilleurS3(struct Voiture voiture[20]){
         return v;
 }
 
-struct Voiture meilleurTour(struct Voiture voiture[20]){
+struct Voiture meilleurTourQ3(struct Voiture voiture[20]){
         double meilleurTemps = 999;
         struct Voiture v;
         int i;
-        for(i=0 ; i<20 ; i++){
+        for(i=0 ; i<10 ; i++){
                 if(meilleurTemps > voiture[i].tempsSecteur1 + voiture[i].tempsSecteur2 + voiture[i].tempsSecteur3){
                         meilleurTemps = voiture[i].tempsSecteur1 + voiture[i].tempsSecteur2 + voiture[i].tempsSecteur3;
                         v = voiture[i];
@@ -252,4 +242,3 @@ struct Voiture meilleurTour(struct Voiture voiture[20]){
         }
         return v;
 }
-*/

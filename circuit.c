@@ -8,7 +8,7 @@
 int pitstop();
 int giveUp();
 
-struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
+struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit, int nombreTours){
 
 	
 	voiture.pitstop = 0;
@@ -36,12 +36,12 @@ struct Voiture voitRoule(struct Voiture voiture, struct Circuit *circuit){
                         voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
 			voiture.pitstop = 1;
                 }
-		if (voiture.nbrTour == 20 && voiture.nbrPitstop < 1 && pit != 1) {
+		if (voiture.nbrTour == (int)(nombreTours/2) && voiture.nbrPitstop < 1 && pit != 1) {
 			voiture.nbrPitstop = voiture.nbrPitstop + 1;
                         voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
                         voiture.pitstop = 1;
 		}
-		if (voiture.nbrTour == 35 && voiture.nbrPitstop < 2 && pit != 1) {
+		if (voiture.nbrTour == (int)(nombreTours*0.85) && voiture.nbrPitstop < 2 && pit != 1) {
                         voiture.nbrPitstop = voiture.nbrPitstop + 1;
                         voiture.tempsSecteur3 = voiture.tempsSecteur3 + (ourRandom(5.0)+5.0);
                         voiture.pitstop = 1;
