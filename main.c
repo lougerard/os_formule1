@@ -29,7 +29,7 @@ struct Voiture meilleurS2(struct Voiture voiture[20]);
 struct Voiture meilleurS3(struct Voiture voiture[20]);
 struct Voiture meilleurTour(struct Voiture voiture[20]);
 void aband(struct Classement *class);
-void depart(struct Classement *classement);
+void depart(struct Classement *classement, char text[]);
 
 int main (int argc, char* argv[]){
 	//qualification(20);
@@ -61,11 +61,18 @@ int main (int argc, char* argv[]){
 	classement = shmat(shmid, 0, 0);
 	qualification1(classement, circuit);
 	usleep(1000000);
+	char text[] = "Depart de Qualification 2";
+	depart(classement, text);
+	usleep(1000000);
 	qualification2(classement, circuit);
+	usleep(1000000);
+	char text2[] = "Depart de Qualification 3";
+	depart(classement, text2);
 	usleep(1000000);
 	qualification3(classement, circuit);
 	usleep(1000000);
-	depart(classement);
+	char text3[] = "Depart du Grand Prix de F1";
+	depart(classement, text3);
 	usleep(1000000);
 	//printf("avant");
 	//qualification(classement, 2, circuit);
@@ -166,7 +173,7 @@ int main (int argc, char* argv[]){
 	return 1;
 }
 
-void depart(struct Classement *classement){
+void depart(struct Classement *classement, char text[]){
 	int y;
 	for(y=0 ; y<20 ; y++){
 		classement->tabClass[y].tempsSecteur1 = 0.000000;
@@ -179,13 +186,23 @@ void depart(struct Classement *classement){
 		classement->tabClass[y].abandon = 0;
                 if (y==0) {
         	        printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                        printf("||                                                       DEPART GRAND PRIX DE FORMULE 1                                                         ||\n");
+                        printf("||								%s                                                       ||\n", text);
                         printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                         printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
                         printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                  }
 		 afficheLigneQ(classement->tabClass[y], y);
          }
+	printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                                printf("||                                                              MEILLEURS TEMPS TOUR                                                            ||\n");
+                                printf("--------------------------------------------------------------------------------------------------------------------------------------------------");
+                                printf("\n|| /  | /     |%f %i  |%f %i  |%f %i  |%f %i  | /             | /             | /             | /             ||\n",0, 0, 0, 0, 0, 0, 0, 0);
+                                printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                                printf("||                                                              MEILLEURS TEMPS GENERAL                                                         ||\n");
+                                printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+
+                                printf("|| /    | /     |%f %i  |%f %i  |%f %i  |%f %i  |%i:%i:%i       | /             | /             | /             ||\n", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                                printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 }        
 
 void afficheLigne(struct Voiture voit, int a) {
