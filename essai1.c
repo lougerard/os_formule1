@@ -1,3 +1,7 @@
+#include <semaphore.h> 
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdio.h>
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -9,11 +13,15 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <string.h>
-#include <semaphore.h>
+#include "rand.h"
+#include "essai.h"
+#include "circuit.c"
 
 #define NBVOITURE 20
 
 void afficheLigneE(struct Voiture voit, int a, FILE* fichier);
+void printFichier(int num, struct Classement *class, int vS1G, int vS2G, int vS3G, int vTG, double meilleurS1G, double meilleurS2G, double meilleurS3G, double meilleurTG);
+void afficheLigneQ(struct Voiture voit, int a);
 void trieTabQ(struct Classement *classement);
 struct Voiture meilleurS1(struct Voiture voiture[20]);
 struct Voiture meilleurS2(struct Voiture voiture[20]);
@@ -36,10 +44,13 @@ for (loop = 1; loop <= 3 ; loop++) {
 	double meilleurTG = 999;
         int vTG = 0;
 	sem_t *sem;
+	struct shmid_ds *buf;
         key_t key=9880;
         int shmid, size;
         size = sizeof(struct Voiture) * NBVOITURE;
         shmid = shmget(9880, size, IPC_CREAT | 0666);
+	shmctl(shmid, IPC_RMID, buf);
+	shmid = shmget(9880, size, IPC_CREAT | 0666);
         pid_t pids[20];
         int i;
         int k;
@@ -74,18 +85,21 @@ for (loop = 1; loop <= 3 ; loop++) {
                                         classement->tabClass[i] = voitRoule(voitureCourante, circuit, 40);
                                 }
 				sem_post(sem);
-				shmdt(classement);
+				//shmdt(classement);
                                 exit(0);
                         }
                         else if(pids[i] > 0 && i == 20){
+				int shmidPere;
+				shmidPere = shmget(key, size, 0666);
+				classement = shmat(shmidPere, 0, 0);
                                 sem_wait(sem);
 				int a = 1;
                                 for(a=0 ; a<20 ; a++){
                                         if (a==0) {
                                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                                                printf("||                                                              ESSAI 1		                                                        ||\n");
+                                                printf("||								ESSAI %i										||\n", loop);
 						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                                                printf("||place |num    |T_s1           |T_s2           |T_s3           |T_tour         |T_actuel       |nbrPit         |nbrTour        |abandon        ||\n");
+                                                printf("||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
                                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
                                         }
                                         trieTabQ(classement);
@@ -121,7 +135,7 @@ for (loop = 1; loop <= 3 ; loop++) {
                                 int sec = time->tSec;
                                 int milli = time->tMilliSec;
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                                printf("||                                                              MEILLEURS TEMPS TOUR                                                            ||\n");
+                                printf("||								MEILLEURS TEMPS									||\n");
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------");
                                 printf("\n|| /	| /	|%f %i	|%f %i	|%f %i	|%f %i	| /		| /		| /		| /		||\n",meilleurSecteur1, x1.numVoiture, meilleurSecteur2, x2.numVoiture, meilleurSecteur3, x3.numVoiture, meilleurT, x4.numVoiture);
                                 printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
@@ -134,19 +148,23 @@ for (loop = 1; loop <= 3 ; loop++) {
                                 sem_post(sem);
                         }
                 }
+		printf("%i %i %i %i %f %f %f %f", vS1G, vS2G, vS3G, vTG, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG);
+		if (k == nbrTours) {
+			sem_wait(sem);
+			printFichier(loop, classement, vS1G, vS2G, vS3G, vTG, meilleurS1G, meilleurS2G, meilleurS3G, meilleurTG);
+			sem_post(sem);
+		}
         }
 
-
-	printFichier(loop);
 	usleep(1000000);
-	//shmdt(classement);
+	shmdt(classement);
 	sem_unlink("semP");
 	sem_close(sem);
 
 }
 }
 
-printFichier(int num, struct Classement *class) {
+void printFichier(int num, struct Classement *class, int vS1G, int vS2G, int vS3G, int vTG, double meilleurS1G, double meilleurS2G, double meilleurS3G, double meilleurTG) {
 	FILE* fichier = NULL;
     	int k = num;
     	if (k == 1) {
@@ -161,19 +179,23 @@ printFichier(int num, struct Classement *class) {
     	if (fichier != NULL)
     	{	
 		fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                                                fprintf(fichier, "||                                                              ESSAI 1		                                                        ||\n");
+                                                fprintf(fichier, "||								ESSAI % i									||\n", k);
 						fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                                                fprintf(fichier, "||place |num    |T_s1           |T_s2           |T_s3           |T_tour         |T_actuel       |nbrPit         |nbrTour        |abandon        ||\n");
+                                                fprintf(fichier, "||place	|num	|T_s1		|T_s2		|T_s3		|T_tour		|T_actuel	|nbrPit		|nbrTour	|abandon	||\n");
                                                 fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");		
 		int lo;
 		for (lo = 0; lo < 20; lo++ ) {
 			afficheLigneE(class->tabClass[lo],lo, fichier);
 		}
+		fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                                fprintf(fichier, "||								MEILLEURS TEMPS	GENERAL								||\n");
+                                fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
+				fprintf(fichier, "|| /	| /	|%f %i	|%f %i	|%f %i	|%f %i	|%i:%i:%i	| /		| /		| /		||\n", meilleurS1G, vS1G, meilleurS2G, vS2G, meilleurS3G, vS3G, meilleurTG, vTG, 0, 0, 0);
+                                fprintf(fichier, "--------------------------------------------------------------------------------------------------------------------------------------------------\n");
         	fclose(fichier);
     	}
 }
 
-/*
 void trieTabQ(struct Classement *class) {
         struct Voiture v;
         int m;
@@ -189,7 +211,7 @@ void trieTabQ(struct Classement *class) {
                 }
         }
 }
-*/
+
 
 void afficheLigneE(struct Voiture voit, int a, FILE* fichier) {
         struct timeConvert *time = malloc(sizeof(struct timeConvert));
@@ -197,9 +219,16 @@ void afficheLigneE(struct Voiture voit, int a, FILE* fichier) {
         int min = time->min;
         int sec = time->tSec;
         int milli = time->tMilliSec;
-        fprintf(fichier, "||%i    |%i     |%f     |%f     |%f     |%f     |%i:%i:%i       |%i             |%i             |%i             ||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.meilleurTour, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
+        fprintf(fichier, "||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.meilleurTour, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
  }
-/*
+void afficheLigneQ(struct Voiture voit, int a) {
+        struct timeConvert *time = malloc(sizeof(struct timeConvert));
+        tConvert(time, voit.tempsActuel);
+        int min = time->min;
+        int sec = time->tSec;
+        int milli = time->tMilliSec;
+        printf( "||%i	|%i	|%f	|%f	|%f	|%f	|%i:%i:%i	|%i		|%i		|%i		||\n", a+1, voit.numVoiture, voit.tempsSecteur1, voit.tempsSecteur2, voit.tempsSecteur3, voit.meilleurTour, min, sec, milli, voit.nbrPitstop, voit.nbrTour,voit.abandon);
+ }
 
 void aband(struct Classement *class){
         struct Voiture v;
@@ -266,4 +295,23 @@ struct Voiture meilleurTour(struct Voiture voiture[20]){
                 }
         }
         return v;
-}*/
+}
+
+
+
+
+
+
+int main(int argc, char* argv[]) {
+	struct Circuit *circuit = malloc(sizeof(struct Circuit));
+	circuit->secteur1Min = 10.0;
+        circuit->secteur1Max = 20.0;
+        circuit->secteur2Min = 25.0;
+        circuit->secteur2Max = 35.0;
+        circuit->secteur3Min = 35.0;
+        circuit->secteur3Max = 40.0;
+	essai1(circuit);
+}
+
+
+
