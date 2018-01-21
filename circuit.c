@@ -58,7 +58,7 @@ int pitstop(){
 
 int giveUp(){
 	double rand = ourRandom(14.0);
-	if(rand>=5.0 && rand<=5.07){
+	if(rand>=5.0 && rand<=5.05){
 		return 1;
 	}
 	return 0;

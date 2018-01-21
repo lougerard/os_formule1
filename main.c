@@ -28,7 +28,7 @@ struct Voiture meilleurS1(struct Voiture voiture[20]);
 struct Voiture meilleurS2(struct Voiture voiture[20]);
 struct Voiture meilleurS3(struct Voiture voiture[20]);
 struct Voiture meilleurTour(struct Voiture voiture[20]);
-void aband(struct Classement *class);
+void aband(struct Classement *class, int nb);
 void depart(struct Classement *classement, char text[]);
 
 int main (int argc, char* argv[]){
@@ -78,6 +78,7 @@ int main (int argc, char* argv[]){
 	int i;
 	int k;
 	sem_t *sem;
+	int nbVoit = 20;
 	struct Voiture voitureCourante;
 	sem = sem_open("semP", O_CREAT | O_EXCL, 0644, 1);
 	for( k=1; k <= nbrTours ; k++) {
@@ -101,6 +102,7 @@ int main (int argc, char* argv[]){
 				if(voitureCourante.abandon == 0){
 					voitureCourante.nbrTour = k - 1;
 					classement->tabClass[i] = voitRoule(voitureCourante, circuit, nbrTours);
+					if (classement->tabClass[i].abandon == 1) {nbVoit --;}
 				}
 				sem_post(sem);
                         	exit(0);
@@ -120,7 +122,7 @@ int main (int argc, char* argv[]){
 						printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 					}
 					trieTab(classement);
-					aband(classement);					
+					aband(classement, nbVoit);					
 					afficheLigne(classement->tabClass[a], a);
 				}
 				struct Voiture x1 = meilleurS1(classement->tabClass);	
@@ -275,12 +277,12 @@ void trieTab(struct Classement *class) {
 	}
 }
 
-void aband(struct Classement *class){
+void aband(struct Classement *class, int nb){
 	struct Voiture v;
 	int i;
 	int j;
-	for(i=0 ; i<20 ; i++){
-		for(j=i+1 ; j<20 ; j++){
+	for(i=0 ; i<nb ; i++){
+		for(j=i+1 ; j<nb ; j++){
 			if (i != j && (class->tabClass[i]).nbrTour < (class->tabClass[j]).nbrTour && (class->tabClass[i]).abandon == 1) {
                                 v = class->tabClass[i];
                                 class->tabClass[i] = class->tabClass[j];

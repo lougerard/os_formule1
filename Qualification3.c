@@ -20,7 +20,7 @@ struct Voiture meilleurS1Q3(struct Voiture voiture[20]);
 struct Voiture meilleurS2Q3(struct Voiture voiture[20]);
 struct Voiture meilleurS3Q3(struct Voiture voiture[20]);
 struct Voiture meilleurTourQ3(struct Voiture voiture[20]);
-void aband(struct Classement *class);
+void aband(struct Classement *class, int nb);
 
 void qualification3(struct Classement *classement, struct Circuit *circuit){
 	
